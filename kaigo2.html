@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_12.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_13.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -868,7 +868,9 @@ function addVital(){
     tempRaw = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
   const temp = Math.round(parseFloat(tempRaw)*10)/10;
-  alert('入力値確認: tempRaw='+tempRaw+' temp='+temp+' time='+time);
+  const el_temp = document.getElementById('v_temp');
+  const el_sbp = document.getElementById('v_sbp');
+  alert('要素存在確認:\nv_temp='+(el_temp?'EXISTS':'NULL')+'\nvalue='+( el_temp?el_temp.value:'N/A')+'\nv_sbp='+(el_sbp?'EXISTS':'NULL')+'\nsbp_value='+(el_sbp?el_sbp.value:'N/A'));
   const sbp = document.getElementById('v_sbp').value||'—';
   const dbp = document.getElementById('v_dbp').value||'—';
   const pulse = document.getElementById('v_pulse').value||'—';
