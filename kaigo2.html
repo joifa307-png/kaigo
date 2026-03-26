@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_11.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_12.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -103,6 +103,8 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
 /* add row */
 .add-section{background:var(--orange-bg);border-radius:var(--radius-sm);padding:14px;border:0.5px solid #F5C49A;}
+.rec-form-panel{display:none;}
+.rec-form-panel.active{display:block;}
 .add-section h4{font-size:19px;font-weight:700;color:var(--orange-t);margin-bottom:14px;}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);}
 .btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);padding:16px 36px;border-radius:var(--radius-sm);font-size:22px;font-weight:600;cursor:pointer;border:none;}
@@ -371,7 +373,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   <div class="modal-body" id="recBody"></div>
 
   <!-- ===== VITAL FORM (fixed in HTML) ===== -->
-  <div id="vitalForm" style="display:none;padding:0 20px 24px;">
+  <div id="vitalForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="rec-list" id="vitalList"></div>
     <div class="add-section">
       <h4>＋ 新規入力</h4>
@@ -390,7 +392,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
 
   <!-- ===== EXCRETION FORM ===== -->
-  <div id="excretionForm" style="display:none;padding:0 20px 24px;">
+  <div id="excretionForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="rec-list" id="excretionList"></div>
     <div class="add-section">
       <h4>＋ 新規入力</h4>
@@ -408,7 +410,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
 
   <!-- ===== BATH FORM ===== -->
-  <div id="bathForm" style="display:none;padding:0 20px 24px;">
+  <div id="bathForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="rec-list" id="bathList"></div>
     <div class="add-section">
       <h4>＋ 新規入力</h4>
@@ -423,7 +425,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
 
   <!-- ===== MEAL FORM ===== -->
-  <div id="mealForm" style="display:none;padding:0 20px 24px;">
+  <div id="mealForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <h4 style="color:var(--text2);">食事内容</h4>
@@ -440,7 +442,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
 
   <!-- ===== REC FORM ===== -->
-  <div id="recForm" style="display:none;padding:0 20px 24px;">
+  <div id="recForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
         <h4 style="color:var(--text2);">レクリエーション</h4>
@@ -459,7 +461,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
 
   <!-- ===== NOTES FORM ===== -->
-  <div id="notesForm" style="display:none;padding:0 20px 24px;">
+  <div id="notesForm" class="rec-form-panel" style="padding:0 20px 24px;">
     <div class="rec-list" id="notesList"></div>
     <div class="add-section">
       <h4>＋ 新規申し送り</h4>
@@ -731,16 +733,13 @@ function renderRecBody(){
   const rec = getResRec(dk, currentResident);
 
   // 全フォームを非表示
-  ['vitalForm','excretionForm','bathForm','mealForm','recForm','notesForm'].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.style.display='none';
-  });
+  document.querySelectorAll('.rec-form-panel').forEach(el=>el.classList.remove('active'));
   // recBodyも非表示
   const body = document.getElementById('recBody');
   body.innerHTML = '';
 
   if(currentTab === 'vital'){
-    document.getElementById('vitalForm').style.display = '';
+    document.getElementById('vitalForm').classList.add('active');
     // リスト更新
     const list = rec.vital.map((v,i)=>
       `<div class="rec-item">
@@ -758,7 +757,7 @@ function renderRecBody(){
     });
   }
   else if(currentTab === 'excretion'){
-    document.getElementById('excretionForm').style.display = '';
+    document.getElementById('excretionForm').classList.add('active');
     const list = rec.excretion.map((v,i)=>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
@@ -770,7 +769,7 @@ function renderRecBody(){
     if(et) et.value = nowTime();
   }
   else if(currentTab === 'bath'){
-    document.getElementById('bathForm').style.display = '';
+    document.getElementById('bathForm').classList.add('active');
     const list = rec.bath.map((v,i)=>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
@@ -782,7 +781,7 @@ function renderRecBody(){
     if(bt) bt.value = nowTime();
   }
   else if(currentTab === 'meal'){
-    document.getElementById('mealForm').style.display = '';
+    document.getElementById('mealForm').classList.add('active');
     const m = rec.meal;
     document.getElementById('m_menu').value = m.menu||'';
     document.getElementById('m_water').value = m.water||'';
@@ -802,7 +801,7 @@ function renderRecBody(){
     });
   }
   else if(currentTab === 'rec'){
-    document.getElementById('recForm').style.display = '';
+    document.getElementById('recForm').classList.add('active');
     const rv = rec.rec;
     document.getElementById('rec_content').value = rv.content||'';
     document.querySelectorAll('[id^="part_"]').forEach(b=>b.classList.remove('selected'));
@@ -812,7 +811,7 @@ function renderRecBody(){
     }
   }
   else if(currentTab === 'notes'){
-    document.getElementById('notesForm').style.display = '';
+    document.getElementById('notesForm').classList.add('active');
     const now2 = Date.now();
     const list = [...rec.notes].reverse().map((n,i)=>{
       const age = now2 - new Date(n.ts).getTime();
