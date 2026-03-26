@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo2_9.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_10.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -377,7 +377,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <h4>＋ 新規入力</h4>
       <div class="form-row" style="margin-bottom:10px;">
         <div class="fg"><label>時刻</label><input type="time" id="v_time"></div>
-        <div class="fg"><label>体温 (℃)</label><input type="tel" id="v_temp" placeholder="36.5"></div>
+        <div class="fg"><label>体温 (℃)</label><input type="tel" id="v_temp" placeholder="36.5" oninput="convertTemp(this)"></div>
       </div>
       <div class="form-row3" style="margin-bottom:10px;">
         <div class="fg"><label>収縮期血圧</label><input type="tel" id="v_sbp" placeholder="120"></div>
@@ -846,9 +846,12 @@ function delRec(type, idx){
 }
 
 function autoTemp(el){
-  let v = el.value.replace(/[^0-9.]/g,'');
-  let digits = v.replace('.','');
-  if(digits.length >= 3 && !el.value.includes('.')){
+  convertTemp(el);
+}
+function convertTemp(el){
+  let v = el.value;
+  let digits = v.replace(/[^0-9]/g,'');
+  if(digits.length >= 3 && !v.includes('.')){
     el.value = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
 }
@@ -859,17 +862,24 @@ function addVital(){
   let timeEl = document.getElementById('v_time');
   let time = timeEl ? timeEl.value : '';
   if(!time){ const n=new Date(); time=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
-  // 体温：365→36.5自動変換
+  // 体温：365→36.5自動変換（保存時に必ず実行）
   let tempRaw = document.getElementById('v_temp').value.replace(/[^0-9.]/g,'');
-  if(tempRaw.length>=3 && !tempRaw.includes('.')){
-    tempRaw = tempRaw.slice(0,2)+'.'+tempRaw.slice(2,3);
+  let digits = tempRaw.replace('.','');
+  if(digits.length>=3 && !tempRaw.includes('.')){
+    tempRaw = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
-  const temp = parseFloat(tempRaw);
+  // 36.50などの余分な0を除去してparseFloat
+  const temp = Math.round(parseFloat(tempRaw)*10)/10;
   if(isNaN(temp)||temp<30||temp>42){alert('体温を入力してください（例：36.5 または 365）');return;}
   const sbp = document.getElementById('v_sbp').value||'—';
   const dbp = document.getElementById('v_dbp').value||'—';
   const pulse = document.getElementById('v_pulse').value||'—';
   const spo2 = document.getElementById('v_spo2').value||'—';
+  // デバッグ：値確認
+  if(sbp==='—'&&dbp==='—'&&pulse==='—'){
+    const confirm_save = window.confirm('血圧・脈拍が未入力です。\n体温のみで保存しますか？\n\n[確認] sbp='+document.getElementById('v_sbp').value+' dbp='+document.getElementById('v_dbp').value+' pulse='+document.getElementById('v_pulse').value);
+    if(!confirm_save) return;
+  }
   rec.vital.push({time,temp,sbp,dbp,pulse,spo2});
   saveData(); renderTable(); closeRecModal();
 }
