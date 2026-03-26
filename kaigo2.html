@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_13.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_14.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -868,18 +868,12 @@ function addVital(){
     tempRaw = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
   const temp = Math.round(parseFloat(tempRaw)*10)/10;
-  const el_temp = document.getElementById('v_temp');
-  const el_sbp = document.getElementById('v_sbp');
-  alert('要素存在確認:\nv_temp='+(el_temp?'EXISTS':'NULL')+'\nvalue='+( el_temp?el_temp.value:'N/A')+'\nv_sbp='+(el_sbp?'EXISTS':'NULL')+'\nsbp_value='+(el_sbp?el_sbp.value:'N/A'));
+
   const sbp = document.getElementById('v_sbp').value||'—';
   const dbp = document.getElementById('v_dbp').value||'—';
   const pulse = document.getElementById('v_pulse').value||'—';
   const spo2 = document.getElementById('v_spo2').value||'—';
-  // デバッグ：値確認
-  if(sbp==='—'&&dbp==='—'&&pulse==='—'){
-    const confirm_save = window.confirm('血圧・脈拍が未入力です。\n体温のみで保存しますか？\n\n[確認] sbp='+document.getElementById('v_sbp').value+' dbp='+document.getElementById('v_dbp').value+' pulse='+document.getElementById('v_pulse').value);
-    if(!confirm_save) return;
-  }
+
   rec.vital.push({time,temp,sbp,dbp,pulse,spo2});
   saveData(); renderTable(); closeRecModal();
 }
