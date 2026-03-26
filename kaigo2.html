@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo2_8.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo2_9.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -369,6 +369,105 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
   <div class="modal-tabs" id="recTabs"></div>
   <div class="modal-body" id="recBody"></div>
+
+  <!-- ===== VITAL FORM (fixed in HTML) ===== -->
+  <div id="vitalForm" style="display:none;padding:0 20px 24px;">
+    <div class="rec-list" id="vitalList"></div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="form-row" style="margin-bottom:10px;">
+        <div class="fg"><label>時刻</label><input type="time" id="v_time"></div>
+        <div class="fg"><label>体温 (℃)</label><input type="tel" id="v_temp" placeholder="36.5"></div>
+      </div>
+      <div class="form-row3" style="margin-bottom:10px;">
+        <div class="fg"><label>収縮期血圧</label><input type="tel" id="v_sbp" placeholder="120"></div>
+        <div class="fg"><label>拡張期血圧</label><input type="tel" id="v_dbp" placeholder="80"></div>
+        <div class="fg"><label>脈拍</label><input type="tel" id="v_pulse" placeholder="70"></div>
+      </div>
+      <div class="fg" style="max-width:160px;"><label>SpO2 (%)</label><input type="tel" id="v_spo2" placeholder="98"></div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addVital()">記録する</button></div>
+    </div>
+  </div>
+
+  <!-- ===== EXCRETION FORM ===== -->
+  <div id="excretionForm" style="display:none;padding:0 20px 24px;">
+    <div class="rec-list" id="excretionList"></div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="fg"><label>時刻</label><input type="time" id="ex_time"></div>
+      <div class="form-row" style="margin-bottom:10px;">
+        <div class="fg"><label>排尿</label>
+          <select id="ex_urine"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
+        </div>
+        <div class="fg"><label>排便</label>
+          <select id="ex_stool"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addExcretion()">記録する</button></div>
+    </div>
+  </div>
+
+  <!-- ===== BATH FORM ===== -->
+  <div id="bathForm" style="display:none;padding:0 20px 24px;">
+    <div class="rec-list" id="bathList"></div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="form-row">
+        <div class="fg"><label>時刻</label><input type="time" id="ba_time"></div>
+        <div class="fg"><label>入浴内容</label>
+          <select id="ba_type"><option>普通浴</option><option>シャワー浴</option><option>清拭</option><option>入浴なし</option></select>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addBath()">記録する</button></div>
+    </div>
+  </div>
+
+  <!-- ===== MEAL FORM ===== -->
+  <div id="mealForm" style="display:none;padding:0 20px 24px;">
+    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="color:var(--text2);">食事内容</h4>
+        <button class="btn-all" onclick="applyAllMeal()">👥 全員に反映</button>
+      </div>
+      <div class="fg"><label>メニュー</label><input type="text" id="m_menu" placeholder="例：鮭の塩焼き定食"></div>
+      <div class="form-row3">
+        <div class="fg"><label>主食摂取量(%)</label><select id="m_main"></select></div>
+        <div class="fg"><label>副食摂取量(%)</label><select id="m_side"></select></div>
+        <div class="fg"><label>水分摂取量(ml)</label><input type="tel" id="m_water" placeholder="200"></div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="saveMeal()">保存</button></div>
+    </div>
+  </div>
+
+  <!-- ===== REC FORM ===== -->
+  <div id="recForm" style="display:none;padding:0 20px 24px;">
+    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="color:var(--text2);">レクリエーション</h4>
+        <button class="btn-all" onclick="applyAllRec()">👥 全員に反映</button>
+      </div>
+      <div class="fg"><label>内容</label><input type="text" id="rec_content" placeholder="例：体操・歌・塗り絵"></div>
+      <div class="fg"><label>参加状況</label>
+        <div class="check-group">
+          <button class="check-btn" id="part_参加" onclick="selectPart(&#39;参加&#39;)">参加</button>
+          <button class="check-btn" id="part_見学" onclick="selectPart(&#39;見学&#39;)">見学</button>
+          <button class="check-btn" id="part_不参加" onclick="selectPart(&#39;不参加&#39;)">不参加</button>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="saveRec()">保存</button></div>
+    </div>
+  </div>
+
+  <!-- ===== NOTES FORM ===== -->
+  <div id="notesForm" style="display:none;padding:0 20px 24px;">
+    <div class="rec-list" id="notesList"></div>
+    <div class="add-section">
+      <h4>＋ 新規申し送り</h4>
+      <div class="fg"><textarea id="note_text" placeholder="申し送り内容を入力..." rows="3"></textarea></div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addNote()">登録する</button></div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -630,159 +729,95 @@ function nowTime(){
 function renderRecBody(){
   const dk = dateKey(currentDate);
   const rec = getResRec(dk, currentResident);
+
+  // 全フォームを非表示
+  ['vitalForm','excretionForm','bathForm','mealForm','recForm','notesForm'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+  // recBodyも非表示
   const body = document.getElementById('recBody');
+  body.innerHTML = '';
 
   if(currentTab === 'vital'){
-    const list = rec.vital.map((v,i) =>
+    document.getElementById('vitalForm').style.display = '';
+    // リスト更新
+    const list = rec.vital.map((v,i)=>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div>
         <button class="rec-item-del" onclick="delRec('vital',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-
-    body.innerHTML = `<div class="rec-list">${list}</div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>時刻</label><input type="time" id="v_time" /></div>
-        <div class="fg"><label>体温 (℃)</label><input type="number" id="v_temp" placeholder="36.5" step="0.1" min="30" max="42" /></div>
-      </div>
-      <div class="form-row3" style="margin-bottom:10px;">
-        <div class="fg"><label>収縮期血圧</label><input type="number" id="v_sbp" placeholder="120" /></div>
-        <div class="fg"><label>拡張期血圧</label><input type="number" id="v_dbp" placeholder="80" /></div>
-        <div class="fg"><label>脈拍</label><input type="number" id="v_pulse" placeholder="70" /></div>
-      </div>
-      <div class="fg" style="max-width:160px;"><label>SpO2 (%)</label><input type="number" id="v_spo2" placeholder="98" /></div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addVital()">記録する</button></div>
-    </div>`;
-    setTimeout(()=>{const el=document.getElementById('v_time');if(el)el.value=nowTime();},0);
+    document.getElementById('vitalList').innerHTML = list;
+    // iOS対応：時刻を直接セット
+    const vt = document.getElementById('v_time');
+    if(vt) vt.value = nowTime();
+    // 入力欄クリア
+    ['v_temp','v_sbp','v_dbp','v_pulse','v_spo2'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
   }
-
   else if(currentTab === 'excretion'){
-    const list = rec.excretion.map((v,i) =>
+    document.getElementById('excretionForm').style.display = '';
+    const list = rec.excretion.map((v,i)=>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">排尿: ${v.urine} ／ 排便: ${v.stool}</div>
         <button class="rec-item-del" onclick="delRec('excretion',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-
-    body.innerHTML = `<div class="rec-list">${list}</div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>時刻</label><input type="time" id="ex_time" /></div>
-      </div>
-      <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>排尿</label>
-          <select id="ex_urine"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
-        </div>
-        <div class="fg"><label>排便</label>
-          <select id="ex_stool"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addExcretion()">記録する</button></div>
-    </div>`;
-    setTimeout(()=>{
-      const el = document.getElementById('ex_time');
-      if(el) el.value = nowTime();
-    }, 0);
+    document.getElementById('excretionList').innerHTML = list;
+    const et = document.getElementById('ex_time');
+    if(et) et.value = nowTime();
   }
-
   else if(currentTab === 'bath'){
-    const list = rec.bath.map((v,i) =>
+    document.getElementById('bathForm').style.display = '';
+    const list = rec.bath.map((v,i)=>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">${v.type}</div>
         <button class="rec-item-del" onclick="delRec('bath',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-
-    body.innerHTML = `<div class="rec-list">${list}</div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="form-row">
-        <div class="fg"><label>時刻</label><input type="time" id="ba_time" /></div>
-        <div class="fg"><label>入浴内容</label>
-          <select id="ba_type"><option>普通浴</option><option>シャワー浴</option><option>清拭</option><option>入浴なし</option></select>
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addBath()">記録する</button></div>
-    </div>`;
-    setTimeout(()=>{
-      const el = document.getElementById('ba_time');
-      if(el) el.value = nowTime();
-    }, 0);
+    document.getElementById('bathList').innerHTML = list;
+    const bt = document.getElementById('ba_time');
+    if(bt) bt.value = nowTime();
   }
-
   else if(currentTab === 'meal'){
+    document.getElementById('mealForm').style.display = '';
     const m = rec.meal;
-    body.innerHTML = `
-    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="color:var(--text2);">食事内容</h4>
-        <button class="btn-all" onclick="applyAllMeal()">👥 全員に反映</button>
-      </div>
-      <div class="fg"><label>メニュー</label><input type="text" id="m_menu" value="${m.menu||''}" placeholder="例：鮭の塩焼き定食" /></div>
-      <div class="form-row3">
-        <div class="fg"><label>主食摂取量(%)</label>
-          <select id="m_main">
-            <option value="">未入力</option>
-            ${[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${(m.main!==null?m.main===v:v===100)?' selected':''}>${v}%</option>`).join('')}
-          </select>
-        </div>
-        <div class="fg"><label>副食摂取量(%)</label>
-          <select id="m_side">
-            <option value="">未入力</option>
-            ${[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${(m.side!==null?m.side===v:v===100)?' selected':''}>${v}%</option>`).join('')}
-          </select>
-        </div>
-        <div class="fg"><label>水分摂取量(ml)</label><input type="number" id="m_water" value="${m.water||''}" placeholder="200" /></div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="saveMeal()">保存</button></div>
-    </div>`;
+    document.getElementById('m_menu').value = m.menu||'';
+    document.getElementById('m_water').value = m.water||'';
+    // 主食・副食セレクト生成
+    ['m_main','m_side'].forEach((sid,idx2)=>{
+      const sel = document.getElementById(sid);
+      const cur = idx2===0 ? m.main : m.side;
+      sel.innerHTML = '<option value="">未入力</option>';
+      [0,10,20,30,40,50,60,70,80,90,100].forEach(v=>{
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v+'%';
+        if(cur!==null && cur===v) opt.selected = true;
+        else if(cur===null && v===100) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    });
   }
-
   else if(currentTab === 'rec'){
+    document.getElementById('recForm').style.display = '';
     const rv = rec.rec;
-    const parts = ['参加','見学','不参加'];
-    body.innerHTML = `
-    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="color:var(--text2);">レクリエーション</h4>
-        <button class="btn-all" onclick="applyAllRec()">👥 全員に反映</button>
-      </div>
-      <div class="fg"><label>内容</label><input type="text" id="rec_content" value="${rv.content||''}" placeholder="例：体操・歌・塗り絵" /></div>
-      <div class="fg"><label>参加状況</label>
-        <div class="check-group">
-          ${parts.map(p=>`<button class="check-btn${rv.participation===p?' selected':''}" onclick="selectPart('${p}')" id="part_${p}">${p}</button>`).join('')}
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="saveRec()">保存</button></div>
-    </div>`;
+    document.getElementById('rec_content').value = rv.content||'';
+    document.querySelectorAll('[id^="part_"]').forEach(b=>b.classList.remove('selected'));
+    if(rv.participation){
+      const pb = document.getElementById('part_'+rv.participation);
+      if(pb) pb.classList.add('selected');
+    }
   }
-
-  else if(currentTab === 'meds'){
-    const mv = rec.meds;
-    const slots = [{id:'am',label:'朝'},{id:'noon',label:'昼'},{id:'pm',label:'夕'},{id:'night',label:'就寝前'}];
-    body.innerHTML = `
-    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
-      <h4 style="color:var(--text2);margin-bottom:14px;">服薬確認</h4>
-      <div class="form-row4">
-        ${slots.map(s=>`
-          <div style="text-align:center;">
-            <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">${s.label}</div>
-            <button class="check-btn${mv[s.id]?' selected':''}" style="width:100%;" onclick="toggleMed('${s.id}')" id="med_${s.id}">${mv[s.id]?'✔ 済':'未'}</button>
-          </div>`).join('')}
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="saveMeds()">保存</button></div>
-    </div>`;
-  }
-
   else if(currentTab === 'notes'){
-    const now = Date.now();
-    const list = [...rec.notes].reverse().map((n,i) => {
-      const age = now - new Date(n.ts).getTime();
+    document.getElementById('notesForm').style.display = '';
+    const now2 = Date.now();
+    const list = [...rec.notes].reverse().map((n,i)=>{
+      const age = now2 - new Date(n.ts).getTime();
       const h = Math.floor(age/3600000);
-      const ageStr = h < 1 ? '今' : h < 24 ? `${h}時間前` : `${Math.floor(h/24)}日前`;
+      const ageStr = h<1?'今':h<24?h+'時間前':Math.floor(h/24)+'日前';
       const within48 = age < 48*3600000;
       return `<div class="rec-item" style="${within48?'border-left:3px solid var(--orange);':''}">
         <span class="rec-item-time" style="min-width:60px;font-size:11px;">${formatTs(n.ts)}<br><span style="color:var(--text3)">${ageStr}</span></span>
@@ -790,13 +825,9 @@ function renderRecBody(){
         <button class="rec-item-del" onclick="delNote(${rec.notes.length-1-i})">✕</button>
       </div>`;
     }).join('') || '<div class="no-rec">申し送り記録なし</div>';
-
-    body.innerHTML = `<div class="rec-list">${list}</div>
-    <div class="add-section">
-      <h4>＋ 新規申し送り</h4>
-      <div class="fg"><textarea id="note_text" placeholder="申し送り内容を入力..." rows="3"></textarea></div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addNote()">登録する</button></div>
-    </div>`;
+    document.getElementById('notesList').innerHTML = list;
+    const nt = document.getElementById('note_text');
+    if(nt) nt.value='';
   }
 }
 
@@ -824,15 +855,22 @@ function autoTemp(el){
 function addVital(){
   const dk = dateKey(currentDate);
   const rec = getResRec(dk, currentResident);
-  const time=document.getElementById('v_time').value;
-  const temp=parseFloat(document.getElementById('v_temp').value);
-  const sbp=parseInt(document.getElementById('v_sbp').value);
-  const dbp=parseInt(document.getElementById('v_dbp').value);
-  const pulse=parseInt(document.getElementById('v_pulse').value);
-  const spo2=parseInt(document.getElementById('v_spo2').value);
+  // 時刻：input valueが空ならinput要素から直接取得
+  let timeEl = document.getElementById('v_time');
+  let time = timeEl ? timeEl.value : '';
   if(!time){ const n=new Date(); time=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
-  if(isNaN(temp)||temp<=0){alert('体温を正しく入力してください（例：36.5）');return;}
-  rec.vital.push({time,temp,sbp:sbp||'—',dbp:dbp||'—',pulse:pulse||'—',spo2:spo2||'—'});
+  // 体温：365→36.5自動変換
+  let tempRaw = document.getElementById('v_temp').value.replace(/[^0-9.]/g,'');
+  if(tempRaw.length>=3 && !tempRaw.includes('.')){
+    tempRaw = tempRaw.slice(0,2)+'.'+tempRaw.slice(2,3);
+  }
+  const temp = parseFloat(tempRaw);
+  if(isNaN(temp)||temp<30||temp>42){alert('体温を入力してください（例：36.5 または 365）');return;}
+  const sbp = document.getElementById('v_sbp').value||'—';
+  const dbp = document.getElementById('v_dbp').value||'—';
+  const pulse = document.getElementById('v_pulse').value||'—';
+  const spo2 = document.getElementById('v_spo2').value||'—';
+  rec.vital.push({time,temp,sbp,dbp,pulse,spo2});
   saveData(); renderTable(); closeRecModal();
 }
 
