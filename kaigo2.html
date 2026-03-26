@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo2_7.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo2_8.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -208,15 +208,32 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
         </div>
         <div style="font-size:13px;color:var(--text3);">要介護４</div>
       </td>
-      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-val"><span>35.8℃</span></span></td>
+      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-val"><span>118/98</span></span></td>
+      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-val"><span>66</span></span></td>
+      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-val"><span>—%</span></span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;excretion&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
+    </tr><tr>
+      <td style="background:inherit!important;min-width:130px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+          <span style="font-size:20px;font-weight:500;">熊本 絹江</span>
+          <button onclick="cancelResident(&#39;熊本 絹江&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:3px 9px;font-size:14px;cursor:pointer;flex-shrink:0;">✕</button>
+        </div>
+        <div style="font-size:13px;color:var(--text3);">要介護１</div>
+      </td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;excretion&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
+      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
       <td style="background:inherit!important;min-width:130px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
@@ -627,7 +644,7 @@ function renderRecBody(){
     <div class="add-section">
       <h4>＋ 新規入力</h4>
       <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>時刻</label><input type="time" id="v_time" value="${nowTime()}" /></div>
+        <div class="fg"><label>時刻</label><input type="time" id="v_time" /></div>
         <div class="fg"><label>体温 (℃)</label><input type="number" id="v_temp" placeholder="36.5" step="0.1" min="30" max="42" /></div>
       </div>
       <div class="form-row3" style="margin-bottom:10px;">
@@ -638,6 +655,7 @@ function renderRecBody(){
       <div class="fg" style="max-width:160px;"><label>SpO2 (%)</label><input type="number" id="v_spo2" placeholder="98" /></div>
       <div class="modal-foot"><button class="btn-primary" onclick="addVital()">記録する</button></div>
     </div>`;
+    setTimeout(()=>{const el=document.getElementById('v_time');if(el)el.value=nowTime();},0);
   }
 
   else if(currentTab === 'excretion'){
@@ -652,7 +670,7 @@ function renderRecBody(){
     <div class="add-section">
       <h4>＋ 新規入力</h4>
       <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>時刻</label><input type="time" id="ex_time" value="${nowTime()}" /></div>
+        <div class="fg"><label>時刻</label><input type="time" id="ex_time" /></div>
       </div>
       <div class="form-row" style="margin-bottom:10px;">
         <div class="fg"><label>排尿</label>
@@ -664,6 +682,10 @@ function renderRecBody(){
       </div>
       <div class="modal-foot"><button class="btn-primary" onclick="addExcretion()">記録する</button></div>
     </div>`;
+    setTimeout(()=>{
+      const el = document.getElementById('ex_time');
+      if(el) el.value = nowTime();
+    }, 0);
   }
 
   else if(currentTab === 'bath'){
@@ -678,13 +700,17 @@ function renderRecBody(){
     <div class="add-section">
       <h4>＋ 新規入力</h4>
       <div class="form-row">
-        <div class="fg"><label>時刻</label><input type="time" id="ba_time" value="${nowTime()}" /></div>
+        <div class="fg"><label>時刻</label><input type="time" id="ba_time" /></div>
         <div class="fg"><label>入浴内容</label>
           <select id="ba_type"><option>普通浴</option><option>シャワー浴</option><option>清拭</option><option>入浴なし</option></select>
         </div>
       </div>
       <div class="modal-foot"><button class="btn-primary" onclick="addBath()">記録する</button></div>
     </div>`;
+    setTimeout(()=>{
+      const el = document.getElementById('ba_time');
+      if(el) el.value = nowTime();
+    }, 0);
   }
 
   else if(currentTab === 'meal'){
@@ -804,7 +830,7 @@ function addVital(){
   const dbp=parseInt(document.getElementById('v_dbp').value);
   const pulse=parseInt(document.getElementById('v_pulse').value);
   const spo2=parseInt(document.getElementById('v_spo2').value);
-  if(!time){alert('時刻を入力してください');return;}
+  if(!time){ const n=new Date(); time=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
   if(isNaN(temp)||temp<=0){alert('体温を正しく入力してください（例：36.5）');return;}
   rec.vital.push({time,temp,sbp:sbp||'—',dbp:dbp||'—',pulse:pulse||'—',spo2:spo2||'—'});
   saveData(); renderTable(); closeRecModal();
