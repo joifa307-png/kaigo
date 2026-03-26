@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_16.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_17.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="介護記録">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="介護記録">
@@ -24,7 +27,7 @@
 body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100dvh;overflow:hidden;}
 
 /* ===== LAYOUT ===== */
-.app{display:flex;flex-direction:column;height:100dvh;overflow:hidden;}
+.app{display:flex;flex-direction:column;height:100dvh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;}
 
 /* ===== HEADER ===== */
 .header{background:var(--surface);border-bottom:0.5px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
@@ -42,7 +45,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
 /* ===== MAIN TABLE ===== */
 .main{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.table-wrap{flex:1;overflow:hidden;padding:0;min-height:0;position:relative;}
+.table-wrap{flex:1;overflow-y:auto;overflow-x:auto;padding:0;-webkit-overflow-scrolling:touch;min-height:0;}
 .rec-table{width:100%;border-collapse:collapse;background:var(--surface);}
 .rec-table th{background:var(--surface2);font-size:18px;font-weight:500;color:var(--text2);padding:12px 10px;text-align:center;border-bottom:2px solid var(--border2);border-right:0.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:20;}
 .rec-table th:first-child{text-align:left;padding-left:12px;min-width:100px;position:sticky;left:0;z-index:30;}
@@ -69,10 +72,10 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .name-care{font-size:14px;color:var(--text3);}
 
 /* ===== MODAL ===== */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:200;}
-.overlay.show{display:flex;}
-.modal{background:var(--surface);border-radius:20px;width:90vw;max-width:900px;max-height:88vh;overflow-y:auto;padding:0;}
-.overlay.show .modal{transform:none;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;}
+.overlay.show{opacity:1;pointer-events:auto;}
+.modal{background:var(--surface);border-radius:20px;width:90vw;max-width:900px;max-height:88vh;overflow-y:auto;padding:0;transform:scale(.96);transition:transform .2s;}
+.overlay.show .modal{transform:scale(1);}
 .modal-drag{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 0;}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;}
 .modal-head h3{font-size:24px;font-weight:700;}
@@ -103,8 +106,6 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
 /* add row */
 .add-section{background:var(--orange-bg);border-radius:var(--radius-sm);padding:14px;border:0.5px solid #F5C49A;}
-.rec-form-panel{display:none;}
-.rec-form-panel.active{display:block;}
 .add-section h4{font-size:19px;font-weight:700;color:var(--orange-t);margin-bottom:14px;}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);}
 .btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);padding:16px 36px;border-radius:var(--radius-sm);font-size:22px;font-weight:600;cursor:pointer;border:none;}
@@ -117,8 +118,8 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .check-btn.selected{background:var(--green-bg);color:var(--green);border-color:#9FE1CB;font-weight:500;}
 
 /* ===== CALENDAR MODAL ===== */
-.cal-modal{background:var(--surface);border-radius:16px;width:320px;padding:16px;}
-
+.cal-modal{background:var(--surface);border-radius:16px;width:320px;padding:16px;transform:scale(.96);transition:transform .2s;}
+.overlay.show .cal-modal{transform:scale(1);}
 .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
 .cal-day-label{text-align:center;font-size:11px;color:var(--text3);padding:4px 0;}
@@ -131,8 +132,8 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .cal-day.empty{cursor:default;}
 
 /* ===== EXCEL UPLOAD ===== */
-.upload-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:300;}
-.upload-overlay.show{display:flex;}
+.upload-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;}
+.upload-overlay.show{opacity:1;pointer-events:auto;}
 .upload-modal{background:var(--surface);border-radius:16px;width:480px;padding:28px;}
 .upload-drop{border:2px dashed var(--border2);border-radius:var(--radius);padding:32px;text-align:center;cursor:pointer;color:var(--text3);}
 .upload-drop:hover{border-color:var(--orange);color:var(--orange);}
@@ -169,7 +170,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
   <!-- MAIN TABLE -->
   <div class="main">
-    <div class="table-wrap" id="tableWrap" style="padding: 0px; overflow: auto scroll;">
+    <div class="table-wrap" id="tableWrap" style="padding:0;">
       <table class="rec-table" id="mainTable">
         <thead>
           <tr>
@@ -371,105 +372,6 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
   <div class="modal-tabs" id="recTabs"></div>
   <div class="modal-body" id="recBody"></div>
-
-  <!-- ===== VITAL FORM (fixed in HTML) ===== -->
-  <div id="vitalForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="rec-list" id="vitalList"></div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>時刻</label><input type="time" id="v_time"></div>
-        <div class="fg"><label>体温 (℃)</label><input type="tel" id="v_temp" placeholder="36.5" oninput="convertTemp(this)"></div>
-      </div>
-      <div class="form-row3" style="margin-bottom:10px;">
-        <div class="fg"><label>収縮期血圧</label><input type="tel" id="v_sbp" placeholder="120"></div>
-        <div class="fg"><label>拡張期血圧</label><input type="tel" id="v_dbp" placeholder="80"></div>
-        <div class="fg"><label>脈拍</label><input type="tel" id="v_pulse" placeholder="70"></div>
-      </div>
-      <div class="fg" style="max-width:160px;"><label>SpO2 (%)</label><input type="tel" id="v_spo2" placeholder="98"></div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addVital()">記録する</button></div>
-    </div>
-  </div>
-
-  <!-- ===== EXCRETION FORM ===== -->
-  <div id="excretionForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="rec-list" id="excretionList"></div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="fg"><label>時刻</label><input type="time" id="ex_time"></div>
-      <div class="form-row" style="margin-bottom:10px;">
-        <div class="fg"><label>排尿</label>
-          <select id="ex_urine"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
-        </div>
-        <div class="fg"><label>排便</label>
-          <select id="ex_stool"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addExcretion()">記録する</button></div>
-    </div>
-  </div>
-
-  <!-- ===== BATH FORM ===== -->
-  <div id="bathForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="rec-list" id="bathList"></div>
-    <div class="add-section">
-      <h4>＋ 新規入力</h4>
-      <div class="form-row">
-        <div class="fg"><label>時刻</label><input type="time" id="ba_time"></div>
-        <div class="fg"><label>入浴内容</label>
-          <select id="ba_type"><option>普通浴</option><option>シャワー浴</option><option>清拭</option><option>入浴なし</option></select>
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addBath()">記録する</button></div>
-    </div>
-  </div>
-
-  <!-- ===== MEAL FORM ===== -->
-  <div id="mealForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="color:var(--text2);">食事内容</h4>
-        <button class="btn-all" onclick="applyAllMeal()">👥 全員に反映</button>
-      </div>
-      <div class="fg"><label>メニュー</label><input type="text" id="m_menu" placeholder="例：鮭の塩焼き定食"></div>
-      <div class="form-row3">
-        <div class="fg"><label>主食摂取量(%)</label><select id="m_main"></select></div>
-        <div class="fg"><label>副食摂取量(%)</label><select id="m_side"></select></div>
-        <div class="fg"><label>水分摂取量(ml)</label><input type="tel" id="m_water" placeholder="200"></div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="saveMeal()">保存</button></div>
-    </div>
-  </div>
-
-  <!-- ===== REC FORM ===== -->
-  <div id="recForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="color:var(--text2);">レクリエーション</h4>
-        <button class="btn-all" onclick="applyAllRec()">👥 全員に反映</button>
-      </div>
-      <div class="fg"><label>内容</label><input type="text" id="rec_content" placeholder="例：体操・歌・塗り絵"></div>
-      <div class="fg"><label>参加状況</label>
-        <div class="check-group">
-          <button class="check-btn" id="part_参加" onclick="selectPart(&#39;参加&#39;)">参加</button>
-          <button class="check-btn" id="part_見学" onclick="selectPart(&#39;見学&#39;)">見学</button>
-          <button class="check-btn" id="part_不参加" onclick="selectPart(&#39;不参加&#39;)">不参加</button>
-        </div>
-      </div>
-      <div class="modal-foot"><button class="btn-primary" onclick="saveRec()">保存</button></div>
-    </div>
-  </div>
-
-  <!-- ===== NOTES FORM ===== -->
-  <div id="notesForm" class="rec-form-panel" style="padding:0 20px 24px;">
-    <div class="rec-list" id="notesList"></div>
-    <div class="add-section">
-      <h4>＋ 新規申し送り</h4>
-      <div class="fg"><textarea id="note_text" placeholder="申し送り内容を入力..." rows="3"></textarea></div>
-      <div class="modal-foot"><button class="btn-primary" onclick="addNote()">登録する</button></div>
-    </div>
-  </div>
-
 </div>
 </div>
 
@@ -528,6 +430,32 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <input type="text" id="addResName" placeholder="例：山田 太郎" style="font-size:20px;">
     </div>
 
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAddResident()">キャンセル</button>
+      <button class="btn btn-orange" onclick="doAddResident()">追加する</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== ADD RESIDENT MODAL ===== -->
+<div class="overlay" id="addResOverlay" style="align-items:center;">
+<div class="modal" style="border-radius:16px;max-width:460px;">
+  <div class="modal-drag"></div>
+  <div class="modal-head">
+    <h3>当日利用者を追加</h3>
+    <button class="modal-close" onclick="closeAddResident()">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="fg">
+      <label>登録済み利用者から選択</label>
+      <select id="addResSelect" style="font-size:18px;padding:12px;"></select>
+    </div>
+    <div style="text-align:center;font-size:15px;color:var(--text3);margin:8px 0;">または</div>
+    <div class="fg">
+      <label>新規氏名を直接入力</label>
+      <input type="text" id="addResName" placeholder="例：山田 太郎" style="font-size:18px;">
+    </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeAddResident()">キャンセル</button>
       <button class="btn btn-orange" onclick="doAddResident()">追加する</button>
@@ -731,92 +659,150 @@ function nowTime(){
 function renderRecBody(){
   const dk = dateKey(currentDate);
   const rec = getResRec(dk, currentResident);
-
-  // 全フォームを非表示
-  document.querySelectorAll('.rec-form-panel').forEach(el=>el.classList.remove('active'));
-  // recBodyも非表示
   const body = document.getElementById('recBody');
-  body.innerHTML = '';
 
   if(currentTab === 'vital'){
-    document.getElementById('vitalForm').classList.add('active');
-    // リスト更新
-    const list = rec.vital.map((v,i)=>
+    const list = rec.vital.map((v,i) =>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div>
         <button class="rec-item-del" onclick="delRec('vital',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-    document.getElementById('vitalList').innerHTML = list;
-    // iOS対応：時刻を直接セット
-    const vt = document.getElementById('v_time');
-    if(vt) vt.value = nowTime();
-    // 入力欄クリア
-    ['v_temp','v_sbp','v_dbp','v_pulse','v_spo2'].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.value='';
-    });
+
+    body.innerHTML = `<div class="rec-list">${list}</div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="form-row" style="margin-bottom:10px;">
+        <div class="fg"><label>時刻</label><input type="time" id="v_time" value="${nowTime()}" /></div>
+        <div class="fg"><label>体温 (℃)</label><input type="text" id="v_temp" placeholder="36.5" inputmode="decimal" oninput="autoTemp(this)" /></div>
+      </div>
+      <div class="form-row3" style="margin-bottom:10px;">
+        <div class="fg"><label>収縮期血圧</label><input type="number" id="v_sbp" placeholder="120" /></div>
+        <div class="fg"><label>拡張期血圧</label><input type="number" id="v_dbp" placeholder="80" /></div>
+        <div class="fg"><label>脈拍</label><input type="number" id="v_pulse" placeholder="70" /></div>
+      </div>
+      <div class="fg" style="max-width:160px;"><label>SpO2 (%)</label><input type="number" id="v_spo2" placeholder="98" /></div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addVital()">記録する</button></div>
+    </div>`;
   }
+
   else if(currentTab === 'excretion'){
-    document.getElementById('excretionForm').classList.add('active');
-    const list = rec.excretion.map((v,i)=>
+    const list = rec.excretion.map((v,i) =>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">排尿: ${v.urine} ／ 排便: ${v.stool}</div>
         <button class="rec-item-del" onclick="delRec('excretion',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-    document.getElementById('excretionList').innerHTML = list;
-    const et = document.getElementById('ex_time');
-    if(et) et.value = nowTime();
+
+    body.innerHTML = `<div class="rec-list">${list}</div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="form-row" style="margin-bottom:10px;">
+        <div class="fg"><label>時刻</label><input type="time" id="ex_time" value="${nowTime()}" /></div>
+      </div>
+      <div class="form-row" style="margin-bottom:10px;">
+        <div class="fg"><label>排尿</label>
+          <select id="ex_urine"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
+        </div>
+        <div class="fg"><label>排便</label>
+          <select id="ex_stool"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addExcretion()">記録する</button></div>
+    </div>`;
   }
+
   else if(currentTab === 'bath'){
-    document.getElementById('bathForm').classList.add('active');
-    const list = rec.bath.map((v,i)=>
+    const list = rec.bath.map((v,i) =>
       `<div class="rec-item">
         <span class="rec-item-time">${v.time}</span>
         <div class="rec-item-body">${v.type}</div>
         <button class="rec-item-del" onclick="delRec('bath',${i})">✕</button>
       </div>`).join('') || '<div class="no-rec">記録なし</div>';
-    document.getElementById('bathList').innerHTML = list;
-    const bt = document.getElementById('ba_time');
-    if(bt) bt.value = nowTime();
+
+    body.innerHTML = `<div class="rec-list">${list}</div>
+    <div class="add-section">
+      <h4>＋ 新規入力</h4>
+      <div class="form-row">
+        <div class="fg"><label>時刻</label><input type="time" id="ba_time" value="${nowTime()}" /></div>
+        <div class="fg"><label>入浴内容</label>
+          <select id="ba_type"><option>普通浴</option><option>シャワー浴</option><option>清拭</option><option>入浴なし</option></select>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addBath()">記録する</button></div>
+    </div>`;
   }
+
   else if(currentTab === 'meal'){
-    document.getElementById('mealForm').classList.add('active');
     const m = rec.meal;
-    document.getElementById('m_menu').value = m.menu||'';
-    document.getElementById('m_water').value = m.water||'';
-    // 主食・副食セレクト生成
-    ['m_main','m_side'].forEach((sid,idx2)=>{
-      const sel = document.getElementById(sid);
-      const cur = idx2===0 ? m.main : m.side;
-      sel.innerHTML = '<option value="">未入力</option>';
-      [0,10,20,30,40,50,60,70,80,90,100].forEach(v=>{
-        const opt = document.createElement('option');
-        opt.value = v;
-        opt.textContent = v+'%';
-        if(cur!==null && cur===v) opt.selected = true;
-        else if(cur===null && v===100) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    });
+    body.innerHTML = `
+    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="color:var(--text2);">食事内容</h4>
+        <button class="btn-all" onclick="applyAllMeal()">👥 全員に反映</button>
+      </div>
+      <div class="fg"><label>メニュー</label><input type="text" id="m_menu" value="${m.menu||''}" placeholder="例：鮭の塩焼き定食" /></div>
+      <div class="form-row3">
+        <div class="fg"><label>主食摂取量(%)</label>
+          <select id="m_main">
+            <option value="">未入力</option>
+            ${[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${(m.main!==null?m.main===v:v===100)?' selected':''}>${v}%</option>`).join('')}
+          </select>
+        </div>
+        <div class="fg"><label>副食摂取量(%)</label>
+          <select id="m_side">
+            <option value="">未入力</option>
+            ${[0,10,20,30,40,50,60,70,80,90,100].map(v=>`<option value="${v}"${(m.side!==null?m.side===v:v===100)?' selected':''}>${v}%</option>`).join('')}
+          </select>
+        </div>
+        <div class="fg"><label>水分摂取量(ml)</label><input type="number" id="m_water" value="${m.water||''}" placeholder="200" /></div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="saveMeal()">保存</button></div>
+    </div>`;
   }
+
   else if(currentTab === 'rec'){
-    document.getElementById('recForm').classList.add('active');
     const rv = rec.rec;
-    document.getElementById('rec_content').value = rv.content||'';
-    document.querySelectorAll('[id^="part_"]').forEach(b=>b.classList.remove('selected'));
-    if(rv.participation){
-      const pb = document.getElementById('part_'+rv.participation);
-      if(pb) pb.classList.add('selected');
-    }
+    const parts = ['参加','見学','不参加'];
+    body.innerHTML = `
+    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="color:var(--text2);">レクリエーション</h4>
+        <button class="btn-all" onclick="applyAllRec()">👥 全員に反映</button>
+      </div>
+      <div class="fg"><label>内容</label><input type="text" id="rec_content" value="${rv.content||''}" placeholder="例：体操・歌・塗り絵" /></div>
+      <div class="fg"><label>参加状況</label>
+        <div class="check-group">
+          ${parts.map(p=>`<button class="check-btn${rv.participation===p?' selected':''}" onclick="selectPart('${p}')" id="part_${p}">${p}</button>`).join('')}
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="saveRec()">保存</button></div>
+    </div>`;
   }
+
+  else if(currentTab === 'meds'){
+    const mv = rec.meds;
+    const slots = [{id:'am',label:'朝'},{id:'noon',label:'昼'},{id:'pm',label:'夕'},{id:'night',label:'就寝前'}];
+    body.innerHTML = `
+    <div class="add-section" style="background:var(--surface2);border-color:var(--border);">
+      <h4 style="color:var(--text2);margin-bottom:14px;">服薬確認</h4>
+      <div class="form-row4">
+        ${slots.map(s=>`
+          <div style="text-align:center;">
+            <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">${s.label}</div>
+            <button class="check-btn${mv[s.id]?' selected':''}" style="width:100%;" onclick="toggleMed('${s.id}')" id="med_${s.id}">${mv[s.id]?'✔ 済':'未'}</button>
+          </div>`).join('')}
+      </div>
+      <div class="modal-foot"><button class="btn-primary" onclick="saveMeds()">保存</button></div>
+    </div>`;
+  }
+
   else if(currentTab === 'notes'){
-    document.getElementById('notesForm').classList.add('active');
-    const now2 = Date.now();
-    const list = [...rec.notes].reverse().map((n,i)=>{
-      const age = now2 - new Date(n.ts).getTime();
+    const now = Date.now();
+    const list = [...rec.notes].reverse().map((n,i) => {
+      const age = now - new Date(n.ts).getTime();
       const h = Math.floor(age/3600000);
-      const ageStr = h<1?'今':h<24?h+'時間前':Math.floor(h/24)+'日前';
+      const ageStr = h < 1 ? '今' : h < 24 ? `${h}時間前` : `${Math.floor(h/24)}日前`;
       const within48 = age < 48*3600000;
       return `<div class="rec-item" style="${within48?'border-left:3px solid var(--orange);':''}">
         <span class="rec-item-time" style="min-width:60px;font-size:11px;">${formatTs(n.ts)}<br><span style="color:var(--text3)">${ageStr}</span></span>
@@ -824,9 +810,13 @@ function renderRecBody(){
         <button class="rec-item-del" onclick="delNote(${rec.notes.length-1-i})">✕</button>
       </div>`;
     }).join('') || '<div class="no-rec">申し送り記録なし</div>';
-    document.getElementById('notesList').innerHTML = list;
-    const nt = document.getElementById('note_text');
-    if(nt) nt.value='';
+
+    body.innerHTML = `<div class="rec-list">${list}</div>
+    <div class="add-section">
+      <h4>＋ 新規申し送り</h4>
+      <div class="fg"><textarea id="note_text" placeholder="申し送り内容を入力..." rows="3"></textarea></div>
+      <div class="modal-foot"><button class="btn-primary" onclick="addNote()">登録する</button></div>
+    </div>`;
   }
 }
 
@@ -845,36 +835,30 @@ function delRec(type, idx){
 }
 
 function autoTemp(el){
-  convertTemp(el);
-}
-function convertTemp(el){
-  let v = el.value;
-  let digits = v.replace(/[^0-9]/g,'');
-  if(digits.length >= 3 && !v.includes('.')){
+  let v = el.value.replace(/[^0-9.]/g,'');
+  let digits = v.replace('.','');
+  if(digits.length >= 3 && !el.value.includes('.')){
     el.value = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
 }
 function addVital(){
   const dk = dateKey(currentDate);
   const rec = getResRec(dk, currentResident);
-  // 時刻：input valueが空ならinput要素から直接取得
-  let timeEl = document.getElementById('v_time');
-  let time = timeEl ? timeEl.value : '';
-  if(!time){ const n=new Date(); time=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); }
-  // 体温：365→36.5自動変換（保存時に必ず実行）
-  let tempRaw = document.getElementById('v_temp').value.replace(/[^0-9.]/g,'');
-  let digits = tempRaw.replace('.','');
-  if(digits.length>=3 && !tempRaw.includes('.')){
-    tempRaw = digits.slice(0,2)+'.'+digits.slice(2,3);
+  const time=document.getElementById('v_time').value;
+  let tempStr=document.getElementById('v_temp').value.trim();
+  // 365→36.5自動変換
+  if(tempStr.replace(/[^0-9]/g,'').length>=3 && !tempStr.includes('.')){
+    const d=tempStr.replace(/[^0-9]/g,'');
+    tempStr=d.slice(0,2)+'.'+d.slice(2,3);
   }
-  const temp = Math.round(parseFloat(tempRaw)*10)/10;
-
-  const sbp = document.getElementById('v_sbp').value||'—';
-  const dbp = document.getElementById('v_dbp').value||'—';
-  const pulse = document.getElementById('v_pulse').value||'—';
-  const spo2 = document.getElementById('v_spo2').value||'—';
-
-  rec.vital.push({time,temp,sbp,dbp,pulse,spo2});
+  const temp=parseFloat(tempStr);
+  const sbp=parseInt(document.getElementById('v_sbp').value);
+  const dbp=parseInt(document.getElementById('v_dbp').value);
+  const pulse=parseInt(document.getElementById('v_pulse').value);
+  const spo2=parseInt(document.getElementById('v_spo2').value);
+  if(!time){alert('時刻を入力してください');return;}
+  if(isNaN(temp)||temp<=0){alert('体温を正しく入力してください（例：36.5）');return;}
+  rec.vital.push({time,temp,sbp:sbp||'—',dbp:dbp||'—',pulse:pulse||'—',spo2:spo2||'—'});
   saveData(); renderTable(); closeRecModal();
 }
 
@@ -912,21 +896,18 @@ function saveMeal(){
 
 function applyAllMeal(){
   const dk = dateKey(currentDate);
+  const src = getResRec(dk, currentResident).meal;
   const menu=document.getElementById('m_menu').value.trim();
   const mainV=document.getElementById('m_main').value;
   const sideV=document.getElementById('m_side').value;
-  const water=document.getElementById('m_water').value;
   const todayRes = getTodayResidents();
   todayRes.forEach(r => {
     const rec = getResRec(dk, r.name);
     rec.meal.menu = menu;
-    if(mainV!=='') rec.meal.main = parseInt(mainV);
-    if(sideV!=='') rec.meal.side = parseInt(sideV);
-    if(water) rec.meal.water = parseInt(water);
+    // Only copy menu for all, keep individual portions
   });
+  alert(`本日の利用者${todayRes.length}名にメニューを反映しました`);
   saveData();
-  renderTable();
-  alert(`本日の利用者${todayRes.length}名に食事内容を反映しました`);
 }
 
 function selectPart(p){
@@ -1132,120 +1113,62 @@ function getNextVisit(name, fromDate){
   return '—';
 }
 
+function buildTimeline(dk,name){
+  const rec=getResRec(dk,name);
+  const rows=[];
+  rec.vital.forEach(v=>rows.push({time:v.time,cat:'バイタル',content:`体温：${v.temp}℃、収縮期血圧：${v.sbp}mmHg、拡張期血圧：${v.dbp}mmHg、脈拍：${v.pulse}/分${v.spo2&&v.spo2!=='—'?'、SpO2：'+v.spo2+'%':''}`}));
+  rec.excretion.forEach(e=>rows.push({time:e.time,cat:'排泄',content:`${e.urine!=='なし'?'排尿、排尿介助':''}${e.stool!=='なし'?(e.urine!=='なし'?' ':'')+e.stool+'、排便介助':''}`.trim()||'排泄処理'}));
+  rec.bath.forEach(b=>rows.push({time:b.time,cat:'入浴',content:b.type}));
+  if(rec.meal.menu||rec.meal.main!==null) rows.push({time:'11:45',cat:'食事',content:`メニュー：${rec.meal.menu||'—'}、主食：${rec.meal.main!==null?rec.meal.main+'.00%':'—'}、副食：${rec.meal.side!==null?rec.meal.side+'.00%':'—'}${rec.meal.water?'、水分：'+rec.meal.water+'ml':''}`});
+  if(rec.rec.content) rows.push({time:'',cat:'レク',content:rec.rec.content+(rec.rec.participation?' ('+rec.rec.participation+')':'')});
+  rec.notes.forEach(n=>rows.push({time:formatTs(n.ts).split(' ')[1]||'',cat:'申し送り',content:n.text}));
+  rows.sort((a,b)=>{if(!a.time)return 1;if(!b.time)return -1;return a.time.localeCompare(b.time);});
+  return rows;
+}
+function getNextVisit(name,fromDate){
+  const r=residents.find(x=>x.name===name); if(!r)return '—';
+  for(let d=fromDate.getDate();d<r.schedule.length;d++){
+    if(r.schedule[d]===1){
+      const nd=new Date(fromDate.getFullYear(),fromDate.getMonth(),d+1);
+      const days=['日','月','火','水','木','金','土'];
+      return `${nd.getMonth()+1}月　${nd.getDate()}日　（${days[nd.getDay()]}）`;
+    }
+  }
+  return '—';
+}
 function doPrint(){
-  const selDate = document.getElementById('printDate').value;
-  const selRes = [...document.querySelectorAll('#printResidents .check-btn.selected')].map(b=>b.textContent);
+  const selDate=document.getElementById('printDate').value;
+  const selRes=[...document.querySelectorAll('#printResidents .check-btn.selected')].map(b=>b.textContent);
   if(selRes.length===0){alert('利用者を選択してください');return;}
   closePrint();
-  const dk = selDate;
-  const d = new Date(dk+'T00:00:00');
+  const dk=selDate;
+  const d=new Date(dk+'T00:00:00');
   const days=['日','月','火','水','木','金','土'];
-  const dayStr = `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${days[d.getDay()]}）`;
-  let allPages = '';
-  selRes.forEach((name, idx) => {
-    const rows = buildTimeline(dk, name);
-    const rowsHtml = rows.length > 0 ? rows.map(r =>
-      `<tr><td style="padding:6px 10px;border:1px solid #bbb;white-space:nowrap;vertical-align:top;font-size:13px;">${r.time}</td>
-       <td style="padding:6px 10px;border:1px solid #bbb;white-space:nowrap;vertical-align:top;font-size:13px;">${r.cat}</td>
-       <td style="padding:6px 10px;border:1px solid #bbb;vertical-align:top;line-height:1.7;font-size:13px;">${r.content}</td></tr>`).join('')
-    : '<tr><td colspan="3" style="padding:8px;border:1px solid #bbb;color:#999;text-align:center;">記録なし</td></tr>';
-    const noteText = getResRec(dk,name).notes.map(n=>n.text).join('　')||'';
-    const nextVisit = getNextVisit(name, d);
-    allPages += `<div style="page-break-after:${idx<selRes.length-1?'always':'auto'};padding:20px 28px;font-family:'Hiragino Sans','Yu Gothic',sans-serif;">
+  const dayStr=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${days[d.getDay()]}）`;
+  let allPages='';
+  selRes.forEach((name,idx)=>{
+    const rows=buildTimeline(dk,name);
+    const rowsHtml=rows.length>0?rows.map(r=>`<tr><td style="padding:6px 10px;border:1px solid #bbb;white-space:nowrap;vertical-align:top;font-size:13px;">${r.time}</td><td style="padding:6px 10px;border:1px solid #bbb;white-space:nowrap;vertical-align:top;font-size:13px;">${r.cat}</td><td style="padding:6px 10px;border:1px solid #bbb;vertical-align:top;line-height:1.7;font-size:13px;">${r.content}</td></tr>`).join(''):'<tr><td colspan="3" style="padding:8px;border:1px solid #bbb;color:#999;text-align:center;">記録なし</td></tr>';
+    const noteText=getResRec(dk,name).notes.map(n=>n.text).join('　')||'';
+    const nextVisit=getNextVisit(name,d);
+    allPages+=`<div style="page-break-after:${idx<selRes.length-1?'always':'auto'};padding:20px 28px;font-family:'Hiragino Sans','Yu Gothic',sans-serif;">
       <h2 style="text-align:center;font-size:17px;font-weight:bold;margin-bottom:18px;letter-spacing:3px;">介護記録（連絡帳）</h2>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;font-size:13px;">
         <div>利用者名　<span style="border-bottom:1px solid #000;padding-bottom:2px;padding-right:60px;font-size:15px;font-weight:bold;">${name}</span>　様</div>
         <div>実施日　　${dayStr}</div>
       </div>
       <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
-        <tr style="background:#f0f0f0;">
-          <td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;width:72px;">時間</td>
-          <td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;width:80px;">項目</td>
-          <td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;">内容</td>
-        </tr>
+        <tr style="background:#f0f0f0;"><td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;width:72px;">時間</td><td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;width:80px;">項目</td><td style="padding:7px 10px;border:1px solid #bbb;text-align:center;font-weight:bold;font-size:13px;">内容</td></tr>
         ${rowsHtml}
       </table>
-      <div style="margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:bold;margin-bottom:6px;">備考</div>
-        <div style="border:1px solid #bbb;padding:10px 12px;min-height:70px;line-height:1.8;font-size:13px;">${noteText}</div>
-      </div>
+      <div style="margin-bottom:16px;"><div style="font-size:13px;font-weight:bold;margin-bottom:6px;">備考</div><div style="border:1px solid #bbb;padding:10px 12px;min-height:70px;line-height:1.8;font-size:13px;">${noteText}</div></div>
       <div style="text-align:right;font-size:13px;">次回利用予定日　${nextVisit}</div>
     </div>`;
   });
-  const win = window.open('','_blank','width=1000,height=800');
+  const win=window.open('','_blank','width=1000,height=800');
   if(!win){alert('ポップアップをブロックしています。\nブラウザの設定でポップアップを許可してください。');return;}
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>介護記録（連絡帳）</title>
-  <style>body{margin:0;}@media print{@page{margin:12mm;}.no-print{display:none;}}td{word-break:break-all;}</style>
-  </head><body>
-  <div class="no-print" style="padding:12px;background:#f5f5f5;text-align:center;border-bottom:1px solid #ddd;">
-    <button onclick="window.print()" style="padding:10px 28px;font-size:15px;cursor:pointer;background:#E87722;color:#fff;border:none;border-radius:6px;font-weight:bold;">🖨 印刷 / PDF保存</button>
-  </div>
-  ${allPages}</body></html>`);
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>介護記録（連絡帳）</title><style>body{margin:0;}@media print{@page{margin:12mm;}.no-print{display:none;}}td{word-break:break-all;}</style></head><body><div class="no-print" style="padding:12px;background:#f5f5f5;text-align:center;border-bottom:1px solid #ddd;"><button onclick="window.print()" style="padding:10px 28px;font-size:15px;cursor:pointer;background:#E87722;color:#fff;border:none;border-radius:6px;font-weight:bold;">印刷 / PDF保存</button></div>${allPages}</body></html>`);
   win.document.close();
-}
-
-// ===== ADD RESIDENT =====
-function openAddResident(){
-  // セレクトボックスに全登録利用者を表示（当日表示中の人は除く）
-  const dk = dateKey(currentDate);
-  const sel = document.getElementById('addResSelect');
-  sel.innerHTML = '<option value="">— 選択してください —</option>';
-  // 全登録利用者を表示
-  const allRes = residents.slice().sort((a,b)=>a.name.localeCompare(b.name,'ja'));
-  allRes.forEach(r => {
-    const opt = document.createElement('option');
-    opt.value = r.name;
-    opt.textContent = r.name;
-    sel.appendChild(opt);
-  });
-  document.getElementById('addResName').value = '';
-
-  document.getElementById('addResOverlay').classList.add('show');
-}
-function closeAddResident(){
-  document.getElementById('addResOverlay').classList.remove('show');
-}
-function doAddResident(){
-  const selVal = document.getElementById('addResSelect').value;
-  const inputName = document.getElementById('addResName').value.trim();
-  const dk = dateKey(currentDate);
-  const day = currentDate.getDate()-1;
-
-  if(selVal){
-    // 登録済み利用者を当日に追加
-    const r = residents.find(x=>x.name===selVal);
-    if(r){
-      while(r.schedule.length <= day) r.schedule.push(0);
-      r.schedule[day] = 1;
-      saveData();
-      closeAddResident();
-      renderTable();
-      alert(r.name + 'を本日の利用者に追加しました');
-    }
-  } else if(inputName){
-    // 新規利用者を追加
-    const sched = new Array(31).fill(0);
-    sched[day] = 1;
-    residents.push({name:inputName, care:'', schedule:sched});
-    saveData();
-    closeAddResident();
-    renderTable();
-    alert(inputName + 'を新規登録して本日の利用者に追加しました');
-  } else {
-    alert('利用者を選択するか、氏名を入力してください');
-  }
-}
-function cancelResident(name, e){
-  e.stopPropagation();
-  if(!confirm(name + 'を本日の利用者リストから外しますか？\n（記録データは保持されます）')) return;
-  const dk = dateKey(currentDate);
-  const day = currentDate.getDate()-1;
-  const r = residents.find(x=>x.name===name);
-  if(r && r.schedule.length > day){
-    r.schedule[day] = 0;
-    saveData();
-    renderTable();
-  }
 }
 
 // ===== OVERLAY CLOSE =====
@@ -1286,8 +1209,25 @@ function initScroll(){
   }, {passive:true});
 }
 
+// ===== SCROLL =====
+function initScroll(){
+  const wrap=document.getElementById('tableWrap');
+  if(!wrap)return;
+  let startY=0,startX=0,startTop=0,startLeft=0;
+  wrap.addEventListener('touchstart',function(e){
+    startY=e.touches[0].clientY; startX=e.touches[0].clientX;
+    startTop=wrap.scrollTop; startLeft=wrap.scrollLeft;
+  },{passive:true});
+  wrap.addEventListener('touchmove',function(e){
+    const dy=startY-e.touches[0].clientY;
+    const dx=startX-e.touches[0].clientX;
+    wrap.scrollTop=startTop+dy;
+    wrap.scrollLeft=startLeft+dx;
+  },{passive:true});
+}
 // ===== START =====
 init();
+initScroll();
 initScroll();
 </script>
 
