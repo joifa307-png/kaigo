@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_14.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_15.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -69,10 +69,10 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .name-care{font-size:14px;color:var(--text3);}
 
 /* ===== MODAL ===== */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;}
-.overlay.show{opacity:1;pointer-events:auto;}
-.modal{background:var(--surface);border-radius:20px;width:90vw;max-width:900px;max-height:88vh;overflow-y:auto;padding:0;transform:scale(.96);transition:transform .2s;}
-.overlay.show .modal{transform:scale(1);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:200;}
+.overlay.show{display:flex;}
+.modal{background:var(--surface);border-radius:20px;width:90vw;max-width:900px;max-height:88vh;overflow-y:auto;padding:0;}
+.overlay.show .modal{transform:none;}
 .modal-drag{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 0;}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;}
 .modal-head h3{font-size:24px;font-weight:700;}
@@ -117,8 +117,8 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .check-btn.selected{background:var(--green-bg);color:var(--green);border-color:#9FE1CB;font-weight:500;}
 
 /* ===== CALENDAR MODAL ===== */
-.cal-modal{background:var(--surface);border-radius:16px;width:320px;padding:16px;transform:scale(.96);transition:transform .2s;}
-.overlay.show .cal-modal{transform:scale(1);}
+.cal-modal{background:var(--surface);border-radius:16px;width:320px;padding:16px;}
+
 .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
 .cal-day-label{text-align:center;font-size:11px;color:var(--text3);padding:4px 0;}
