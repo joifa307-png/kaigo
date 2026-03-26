@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_10.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo2_11.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -868,9 +868,8 @@ function addVital(){
   if(digits.length>=3 && !tempRaw.includes('.')){
     tempRaw = digits.slice(0,2)+'.'+digits.slice(2,3);
   }
-  // 36.50などの余分な0を除去してparseFloat
   const temp = Math.round(parseFloat(tempRaw)*10)/10;
-  if(isNaN(temp)||temp<30||temp>42){alert('体温を入力してください（例：36.5 または 365）');return;}
+  alert('入力値確認: tempRaw='+tempRaw+' temp='+temp+' time='+time);
   const sbp = document.getElementById('v_sbp').value||'—';
   const dbp = document.getElementById('v_dbp').value||'—';
   const pulse = document.getElementById('v_pulse').value||'—';
