@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/link1/Downloads/kaigo_record_app_9.html -->
+<!-- saved from url=(0057)file:///C:/Users/link1/Downloads/kaigo_record_app_10.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -44,9 +44,9 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .main{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
 .table-wrap{flex:1;overflow:hidden;padding:0;min-height:0;position:relative;}
 .rec-table{width:100%;border-collapse:collapse;background:var(--surface);}
-.rec-table th{background:var(--surface2);font-size:16px;font-weight:500;color:var(--text2);padding:11px 8px;text-align:center;border-bottom:2px solid var(--border2);border-right:0.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:20;}
+.rec-table th{background:var(--surface2);font-size:18px;font-weight:500;color:var(--text2);padding:12px 10px;text-align:center;border-bottom:2px solid var(--border2);border-right:0.5px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:20;}
 .rec-table th:first-child{text-align:left;padding-left:12px;min-width:100px;position:sticky;left:0;z-index:30;}
-.rec-table td{padding:12px 8px;text-align:center;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);font-size:16px;cursor:pointer;transition:background .12s;}
+.rec-table td{padding:12px 8px;text-align:center;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);font-size:18px;cursor:pointer;transition:background .12s;}
 .rec-table td:first-child{text-align:left;padding-left:12px;font-weight:400;cursor:default;position:sticky;left:0;background:inherit;z-index:5;}
 .rec-table tr:last-child td{border-bottom:none;}
 .rec-table td:hover:not(:first-child){background:var(--blue-bg);}
@@ -56,7 +56,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
 /* cell status */
 .cell-ok{color:var(--blue);font-weight:400;font-size:16px;}
-.cell-val{font-size:16px;color:var(--text);line-height:1.5;font-weight:400;}
+.cell-val{font-size:18px;color:var(--text);line-height:1.6;font-weight:400;}
 .cell-val span{display:block;}
 .cell-empty{color:var(--border2);font-size:18px;}
 .cell-warn{color:var(--red);font-weight:600;}
@@ -64,8 +64,8 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 
 /* name cell */
 .name-cell{display:flex;flex-direction:column;}
-.name-main{font-size:16px;font-weight:400;}
-.name-care{font-size:13px;color:var(--text3);}
+.name-main{font-size:18px;font-weight:400;}
+.name-care{font-size:14px;color:var(--text3);}
 
 /* ===== MODAL ===== */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;}
@@ -74,17 +74,17 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 .overlay.show .modal{transform:scale(1);}
 .modal-drag{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:10px auto 0;}
 .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;}
-.modal-head h3{font-size:22px;font-weight:700;}
+.modal-head h3{font-size:24px;font-weight:700;}
 .modal-close{background:none;border:none;font-size:22px;color:var(--text3);cursor:pointer;padding:0 4px;}
 .modal-tabs{display:flex;border-bottom:0.5px solid var(--border);padding:0 16px;gap:2px;overflow-x:auto;}
-.mtab{padding:12px 20px;font-size:17px;font-weight:500;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+.mtab{padding:12px 20px;font-size:19px;font-weight:500;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
 .mtab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600;}
 .modal-body{padding:16px 20px 24px;}
 
 /* ===== FORM ELEMENTS ===== */
 .fg{margin-bottom:14px;}
-.fg label{font-size:17px;color:var(--text2);display:block;margin-bottom:8px;font-weight:500;}
-.fg input,.fg select,.fg textarea{width:100%;padding:16px 14px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:20px;color:var(--text);outline:none;font-family:inherit;}
+.fg label{font-size:19px;color:var(--text2);display:block;margin-bottom:8px;font-weight:500;}
+.fg input,.fg select,.fg textarea{width:100%;padding:16px 14px;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:22px;color:var(--text);outline:none;font-family:inherit;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--orange);}
 .fg textarea{resize:vertical;min-height:70px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -94,17 +94,17 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
 /* record list */
 .rec-list{margin-bottom:16px;}
 .rec-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:6px;border:0.5px solid var(--border);}
-.rec-item-time{font-size:17px;color:var(--text3);flex-shrink:0;min-width:55px;}
-.rec-item-body{flex:1;font-size:18px;color:var(--text);}
+.rec-item-time{font-size:19px;color:var(--text3);flex-shrink:0;min-width:60px;}
+.rec-item-body{flex:1;font-size:20px;color:var(--text);}
 .rec-item-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;}
 .rec-item-del:hover{color:var(--red);}
 .no-rec{padding:16px;text-align:center;color:var(--text3);font-size:13px;}
 
 /* add row */
 .add-section{background:var(--orange-bg);border-radius:var(--radius-sm);padding:14px;border:0.5px solid #F5C49A;}
-.add-section h4{font-size:17px;font-weight:700;color:var(--orange-t);margin-bottom:14px;}
+.add-section h4{font-size:19px;font-weight:700;color:var(--orange-t);margin-bottom:14px;}
 .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
-.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);padding:16px 36px;border-radius:var(--radius-sm);font-size:20px;font-weight:600;cursor:pointer;border:none;}
+.btn-primary{background:var(--orange);color:#fff;border-color:var(--orange);padding:16px 36px;border-radius:var(--radius-sm);font-size:22px;font-weight:600;cursor:pointer;border:none;}
 .btn-primary:hover{background:var(--orange-t);}
 .btn-all{background:var(--blue-bg);color:var(--blue);border:0.5px solid #B5D4F4;padding:8px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;}
 
@@ -159,6 +159,7 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
     </div>
     <div class="header-right no-print">
       <button class="btn" onclick="openUpload()">📂 予定表読込</button>
+      <button class="btn" onclick="openAddResident()">👤 利用者追加</button>
       <button class="btn btn-orange" onclick="openPrint()">📄 連絡帳印刷</button>
     </div>
   </div>
@@ -178,12 +179,14 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
             <th>入浴</th>
             <th>昼食</th>
             <th>レク</th>
-            <th>服薬</th>
             <th>申し送り</th>
           </tr>
         </thead>
         <tbody id="mainTableBody"><tr>
-      <td><div class="name-cell"><span class="name-main">大野 ヒロコ</span><span class="name-care">要介護２</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">大野 ヒロコ</span><span class="name-care" style="display:block;">要介護２</span></div>
+        <button onclick="cancelResident(&#39;大野 ヒロコ&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -192,10 +195,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;大野 ヒロコ&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">北村 孝子</span><span class="name-care">要介護４</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">北村 孝子</span><span class="name-care" style="display:block;">要介護４</span></div>
+        <button onclick="cancelResident(&#39;北村 孝子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -204,10 +209,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;北村 孝子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;北村 孝子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">熊本 絹江</span><span class="name-care">要介護１</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">熊本 絹江</span><span class="name-care" style="display:block;">要介護１</span></div>
+        <button onclick="cancelResident(&#39;熊本 絹江&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -216,10 +223,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;熊本 絹江&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">田村 敏子</span><span class="name-care">要介護４</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">田村 敏子</span><span class="name-care" style="display:block;">要介護４</span></div>
+        <button onclick="cancelResident(&#39;田村 敏子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -228,10 +237,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;田村 敏子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;田村 敏子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">辻 邦子</span><span class="name-care">要介護３</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">辻 邦子</span><span class="name-care" style="display:block;">要介護３</span></div>
+        <button onclick="cancelResident(&#39;辻 邦子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -240,10 +251,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;辻 邦子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;辻 邦子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">林 清子</span><span class="name-care">要介護３</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">林 清子</span><span class="name-care" style="display:block;">要介護３</span></div>
+        <button onclick="cancelResident(&#39;林 清子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -252,10 +265,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;林 清子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;林 清子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;林 清子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">増田 久美</span><span class="name-care">要介護４</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">増田 久美</span><span class="name-care" style="display:block;">要介護４</span></div>
+        <button onclick="cancelResident(&#39;増田 久美&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -264,10 +279,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;増田 久美&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増田 久美&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">増本 智惠子</span><span class="name-care">要介護１</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">増本 智惠子</span><span class="name-care" style="display:block;">要介護１</span></div>
+        <button onclick="cancelResident(&#39;増本 智惠子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -276,10 +293,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;増本 智惠子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">山口 芙美子</span><span class="name-care">要介護２</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">山口 芙美子</span><span class="name-care" style="display:block;">要介護２</span></div>
+        <button onclick="cancelResident(&#39;山口 芙美子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -288,10 +307,12 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;山口 芙美子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
-      <td><div class="name-cell"><span class="name-main">吉田 嘉子</span><span class="name-care">要介護５</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">吉田 嘉子</span><span class="name-care" style="display:block;">要介護５</span></div>
+        <button onclick="cancelResident(&#39;吉田 嘉子&#39;,event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;vital&#39;)"><span class="cell-empty">—</span></td>
@@ -300,7 +321,6 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;meal&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;meds&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openRec(&#39;吉田 嘉子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr></tbody>
       </table>
@@ -352,6 +372,43 @@ body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background
   </div>
   <input type="file" id="xlsxInput" accept=".xlsx,.xlsm,.xls" style="display:none;" onchange="handleXlsxFile(this.files[0])">
   <div id="uploadStatus" style="margin-top:12px;font-size:13px;color:var(--text2);"></div>
+</div>
+</div>
+
+<!-- ===== ADD RESIDENT MODAL ===== -->
+<div class="overlay" id="addResOverlay" style="align-items:center;">
+<div class="modal" style="border-radius:16px;max-width:460px;max-height:80vh;">
+  <div class="modal-drag"></div>
+  <div class="modal-head">
+    <h3>当日利用者を追加</h3>
+    <button class="modal-close" onclick="closeAddResident()">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="fg">
+      <label>登録済み利用者から選択</label>
+      <select id="addResSelect" style="font-size:20px;padding:14px;">
+        <option value="">— 選択してください —</option>
+      </select>
+    </div>
+    <div style="text-align:center;font-size:16px;color:var(--text3);margin:8px 0;">または</div>
+    <div class="fg">
+      <label>新規氏名を直接入力</label>
+      <input type="text" id="addResName" placeholder="例：山田 太郎" style="font-size:20px;">
+    </div>
+    <div class="fg">
+      <label>介護度</label>
+      <select id="addResCare" style="font-size:20px;padding:14px;">
+        <option value="">— 選択 —</option>
+        <option>要支援１</option><option>要支援２</option>
+        <option>要介護１</option><option>要介護２</option>
+        <option>要介護３</option><option>要介護４</option><option>要介護５</option>
+      </select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAddResident()">キャンセル</button>
+      <button class="btn btn-orange" onclick="doAddResident()">追加する</button>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -489,15 +546,16 @@ function renderTable(){
     // rec
     const recCell = rec.rec.content ? `<span class="cell-ok">✔</span>` : `<span class="cell-empty">—</span>`;
     // meds
-    const medsCount = [rec.meds.am,rec.meds.noon,rec.meds.pm,rec.meds.night].filter(Boolean).length;
-    const medsCell = medsCount > 0 ? `<span class="cell-val">${medsCount}/4</span>` : `<span class="cell-empty">—</span>`;
     // notes - 48h check
     const now = Date.now();
     const has48h = rec.notes.some(n => (now - new Date(n.ts).getTime()) < 48*60*60*1000);
     const noteCell = has48h ? `<span style="color:var(--red);font-size:22px;">●</span>` : `<span class="cell-empty">—</span>`;
 
     return `<tr>
-      <td><div class="name-cell"><span class="name-main">${r.name}</span><span class="name-care">${r.care}</span></div></td>
+      <td><div class="name-cell" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div><span class="name-main">${r.name}</span><span class="name-care" style="display:block;">${r.care}</span></div>
+        <button onclick="cancelResident('${r.name}',event)" style="background:var(--red-bg);color:var(--red);border:0.5px solid #F7C1C1;border-radius:6px;padding:4px 8px;font-size:13px;cursor:pointer;flex-shrink:0;">✕</button>
+      </div></td>
       <td onclick="openRec('${r.name}','vital')">${tempCell}</td>
       <td onclick="openRec('${r.name}','vital')">${bpCell}</td>
       <td onclick="openRec('${r.name}','vital')">${prCell}</td>
@@ -506,7 +564,6 @@ function renderTable(){
       <td onclick="openRec('${r.name}','bath')">${bathCell}</td>
       <td onclick="openRec('${r.name}','meal')">${mealCell}</td>
       <td onclick="openRec('${r.name}','rec')">${recCell}</td>
-      <td onclick="openRec('${r.name}','meds')">${medsCell}</td>
       <td onclick="openRec('${r.name}','notes')">${noteCell}</td>
     </tr>`;
   }).join('');
@@ -519,7 +576,6 @@ const TABS = [
   {id:'bath', label:'入浴'},
   {id:'meal', label:'食事'},
   {id:'rec', label:'レク'},
-  {id:'meds', label:'服薬'},
   {id:'notes', label:'申し送り'},
 ];
 
@@ -731,9 +787,11 @@ function delRec(type, idx){
 }
 
 function autoTemp(input){
-  let v = input.value.replace(/[^0-9]/g,'');
-  if(v.length >= 3){
-    input.value = v.slice(0,2) + '.' + v.slice(2,3);
+  let v = input.value;
+  // 小数点なし3桁以上で自動変換（例：365→36.5）
+  let digits = v.replace(/[^0-9]/g,'');
+  if(digits.length >= 3 && !v.includes('.')){
+    input.value = digits.slice(0,2) + '.' + digits.slice(2,3);
   }
 }
 function addVital(){
@@ -747,7 +805,7 @@ function addVital(){
   const spo2=parseInt(document.getElementById('v_spo2').value);
   if(!time||isNaN(temp)){alert('時刻と体温は必須です');return;}
   rec.vital.push({time,temp,sbp:sbp||'—',dbp:dbp||'—',pulse:pulse||'—',spo2:spo2||'—'});
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function addExcretion(){
@@ -758,7 +816,7 @@ function addExcretion(){
   const stool=document.getElementById('ex_stool').value;
   if(!time){alert('時刻は必須です');return;}
   rec.excretion.push({time,urine,stool});
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function addBath(){
@@ -768,7 +826,7 @@ function addBath(){
   const type=document.getElementById('ba_type').value;
   if(!time){alert('時刻は必須です');return;}
   rec.bath.push({time,type});
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function saveMeal(){
@@ -779,7 +837,7 @@ function saveMeal(){
   const sideV=document.getElementById('m_side').value;
   const water=document.getElementById('m_water').value;
   rec.meal={menu, main: mainV===''?null:parseInt(mainV), side: sideV===''?null:parseInt(sideV), water: water?parseInt(water):null};
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function applyAllMeal(){
@@ -809,7 +867,7 @@ function saveRec(){
   const content=document.getElementById('rec_content').value.trim();
   const sel=document.querySelector('.check-btn.selected[id^="part_"]');
   rec.rec={content, participation: sel?sel.textContent:''};
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function applyAllRec(){
@@ -835,7 +893,7 @@ function toggleMed(id){
   btn.textContent = rec.meds[id] ? '✔ 済' : '未';
 }
 function saveMeds(){
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function addNote(){
@@ -844,7 +902,7 @@ function addNote(){
   const text=document.getElementById('note_text').value.trim();
   if(!text){alert('内容を入力してください');return;}
   rec.notes.push({ts: new Date().toISOString(), text});
-  saveData(); renderRecBody();
+  saveData(); renderRecBody(); renderTable();
 }
 
 function delNote(idx){
@@ -1053,8 +1111,74 @@ function doPrint(){
   win.document.close();
 }
 
+// ===== ADD RESIDENT =====
+function openAddResident(){
+  // セレクトボックスに全登録利用者を表示（当日表示中の人は除く）
+  const dk = dateKey(currentDate);
+  const todayNames = getTodayResidents().map(r=>r.name);
+  const sel = document.getElementById('addResSelect');
+  sel.innerHTML = '<option value="">— 選択してください —</option>';
+  residents.forEach(r => {
+    if(!todayNames.includes(r.name)){
+      const opt = document.createElement('option');
+      opt.value = r.name;
+      opt.textContent = r.name + '　' + r.care;
+      sel.appendChild(opt);
+    }
+  });
+  document.getElementById('addResName').value = '';
+  document.getElementById('addResCare').value = '';
+  document.getElementById('addResOverlay').classList.add('show');
+}
+function closeAddResident(){
+  document.getElementById('addResOverlay').classList.remove('show');
+}
+function doAddResident(){
+  const selVal = document.getElementById('addResSelect').value;
+  const inputName = document.getElementById('addResName').value.trim();
+  const care = document.getElementById('addResCare').value;
+  const dk = dateKey(currentDate);
+  const day = currentDate.getDate()-1;
+
+  if(selVal){
+    // 登録済み利用者を当日に追加
+    const r = residents.find(x=>x.name===selVal);
+    if(r){
+      while(r.schedule.length <= day) r.schedule.push(0);
+      r.schedule[day] = 1;
+      saveData();
+      closeAddResident();
+      renderTable();
+      alert(r.name + 'を本日の利用者に追加しました');
+    }
+  } else if(inputName){
+    // 新規利用者を追加
+    const sched = new Array(31).fill(0);
+    sched[day] = 1;
+    residents.push({name:inputName, care:care||'', schedule:sched});
+    saveData();
+    closeAddResident();
+    renderTable();
+    alert(inputName + 'を新規登録して本日の利用者に追加しました');
+  } else {
+    alert('利用者を選択するか、氏名を入力してください');
+  }
+}
+function cancelResident(name, e){
+  e.stopPropagation();
+  if(!confirm(name + 'を本日の利用者リストから外しますか？\n（記録データは保持されます）')) return;
+  const dk = dateKey(currentDate);
+  const day = currentDate.getDate()-1;
+  const r = residents.find(x=>x.name===name);
+  if(r && r.schedule.length > day){
+    r.schedule[day] = 0;
+    saveData();
+    renderTable();
+  }
+}
+
 // ===== OVERLAY CLOSE =====
-['recOverlay','calOverlay','uploadOverlay','printOverlay'].forEach(id=>{
+['recOverlay','calOverlay','uploadOverlay','printOverlay','addResOverlay'].forEach(id=>{
   document.getElementById(id).addEventListener('click',function(e){
     if(e.target===this) this.classList.remove('show');
   });
