@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0044)file:///C:/Users/link1/Downloads/kaigo3.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_1.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -482,6 +482,15 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       </div>
     </div>
 
+    <!-- DAY SUMMARY -->
+    <div class="panel" id="pDay">
+      <div class="inp-box">
+        <h4>1日の様子</h4>
+        <div class="fg"><textarea id="dayText" placeholder="例：午前中は機嫌よく過ごされました。食欲もあり完食されました。" rows="6"></textarea></div>
+        <button class="save-btn" onclick="saveDay()">保存</button>
+      </div>
+    </div>
+
   </div><!-- /panels -->
 </div><!-- /detailScreen -->
 
@@ -612,7 +621,8 @@ function getRec(name, dateKey){
     vital:[],excretion:[],bath:[],
     meal:{menu:'',main:100,side:100,water:''},
     rec:{content:'',part:''},
-    notes:[]
+    notes:[],
+    day:''
   };
   return db.records[k][name];
 }
@@ -696,6 +706,7 @@ const TABS=[
   {id:'meal',label:'食事'},
   {id:'rec',label:'レク'},
   {id:'notes',label:'申し送り'},
+  {id:'day',label:'1日の様子'},
 ];
 function openDetail(name, tab){
   curRes=name; curTab=tab||'vital';
@@ -770,6 +781,9 @@ function refreshPanel(tab){
     });
     document.querySelectorAll('.chk-btn').forEach(b=>b.classList.remove('on'));
     if(rec.rec.part){ const pb=document.getElementById('part'+rec.rec.part); if(pb) pb.classList.add('on'); }
+  }
+  else if(tab==='day'){
+    document.getElementById('dayText').value=getRec(curRes).day||'';
   }
   else if(tab==='notes'){
     const now=Date.now();
@@ -893,6 +907,11 @@ function saveNote(){
   saveDB(); goBack();
 }
 function delNote(i){ if(!confirm('削除しますか？'))return; getRec(curRes).notes.splice(i,1); saveDB(); refreshPanel('notes'); }
+function saveDay(){
+  const text=document.getElementById('dayText').value;
+  getRec(curRes).day=text;
+  saveDB(); goBack();
+}
 
 // ==================== RESIDENT MGMT ====================
 function removeRes(name){
