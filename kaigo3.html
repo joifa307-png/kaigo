@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_14.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_15.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -156,7 +156,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
     <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
     <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
-    <button class="hdr-btn no-print" onclick="saveJSON()" style="background:#0F6E56;color:#fff;border-color:#0F6E56;">記録保存</button>
+    <button class="hdr-btn no-print" id="btnSave" onclick="saveJSON()" oncontextmenu="deletePrevMonth();return false;" style="background:#0F6E56;color:#fff;border-color:#0F6E56;">記録保存</button>
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -1166,6 +1166,36 @@ function saveJSON(){
     URL.revokeObjectURL(url);
   }
 }
+function deletePrevMonth(){
+  const now = new Date();
+  const prev = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const y = prev.getFullYear();
+  const m = pad(prev.getMonth()+1);
+  const label = y+'年'+parseInt(m)+'月';
+  const keys = Object.keys(db.records).filter(k=>k.startsWith(y+'-'+m+'-'));
+  if(!keys.length){ alert(label+'の記録はありません'); return; }
+  if(!confirm(label+'のデータをアプリから削除します。\nGoogle Driveに保存済みですか？')){ return; }
+  keys.forEach(k=>delete db.records[k]);
+  saveDB();
+  renderMain();
+  alert(label+'のデータを削除しました');
+}
+// 長押し検出（iOS対応）
+(function(){
+  let timer = null;
+  function getBtn(){ return document.getElementById('btnSave'); }
+  document.addEventListener('touchstart', function(e){
+    const btn = getBtn();
+    if(!btn || !btn.contains(e.target)) return;
+    timer = setTimeout(function(){ timer=null; deletePrevMonth(); }, 800);
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(timer){ clearTimeout(timer); timer=null; }
+  });
+  document.addEventListener('touchmove', function(e){
+    if(timer){ clearTimeout(timer); timer=null; }
+  }, {passive:true});
+})();
 function importData(input){
   const file = input.files[0];
   if(!file) return;
