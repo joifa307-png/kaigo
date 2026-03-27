@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_2.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_3.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -48,7 +48,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .name-txt{font-size:22px;font-weight:500;}
 .name-sub{font-size:12px;color:var(--text3);}
 .del-btn{background:var(--red-bg);color:var(--red);border:1px solid #F7C1C1;border-radius:6px;padding:3px 8px;font-size:13px;cursor:pointer;flex-shrink:0;}
-.cell-ok{color:var(--green);font-size:18px;font-weight:600;}
+.cell-ok{color:#0F6E56;font-size:18px;font-weight:600;}
 .cell-val{font-size:17px;line-height:1.5;}
 .cell-empty{color:var(--border2);font-size:18px;}
 .cell-red{color:var(--red);font-size:22px;}
@@ -161,6 +161,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <table class="tbl">
       <thead>
         <tr>
+          <th style="width:40px;min-width:40px;">申送</th>
           <th>氏名</th>
           <th>体温</th>
           <th>血圧</th>
@@ -170,10 +171,10 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
           <th>入浴</th>
           <th>食事</th>
           <th>レク</th>
-          <th>申送り</th>
         </tr>
       </thead>
       <tbody id="mainTbody"><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;大野 ヒロコ&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -191,8 +192,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;大野 ヒロコ&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;大野 ヒロコ&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;大野 ヒロコ&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;大野 ヒロコ&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;北村 孝子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -210,8 +211,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;北村 孝子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;北村 孝子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;北村 孝子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;北村 孝子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;栗田 紀子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -229,8 +230,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;栗田 紀子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;栗田 紀子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;栗田 紀子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;栗田 紀子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;田村 敏子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -248,8 +249,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;田村 敏子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;田村 敏子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;田村 敏子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;田村 敏子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;辻 邦子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -267,8 +268,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;辻 邦子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;辻 邦子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;辻 邦子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;辻 邦子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;林 清子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -286,8 +287,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;林 清子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;林 清子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;林 清子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;林 清子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;福島 チヨミ&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -305,8 +306,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;福島 チヨミ&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;福島 チヨミ&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;福島 チヨミ&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;福島 チヨミ&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;増田 久美&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -324,8 +325,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;増田 久美&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;増田 久美&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;増田 久美&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;増田 久美&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;山口 芙美子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -343,8 +344,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;山口 芙美子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;山口 芙美子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;山口 芙美子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;山口 芙美子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr><tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail(&#39;吉田 嘉子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
       <td>
         <div class="name-wrap">
           <div>
@@ -362,7 +363,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <td onclick="openDetail(&#39;吉田 嘉子&#39;,&#39;bath&#39;)"><span class="cell-empty">—</span></td>
       <td onclick="openDetail(&#39;吉田 嘉子&#39;,&#39;meal&#39;)"><span class="cell-ok">✔</span></td>
       <td onclick="openDetail(&#39;吉田 嘉子&#39;,&#39;rec&#39;)"><span class="cell-empty">—</span></td>
-      <td onclick="openDetail(&#39;吉田 嘉子&#39;,&#39;notes&#39;)"><span class="cell-empty">—</span></td>
     </tr></tbody>
     </table>
   </div>
@@ -599,7 +599,7 @@ function saveDB(){
 }
 
 // ==================== HELPERS ====================
-function dk(d){ return (d||curDate).toISOString().slice(0,10); }
+function dk(d){ const dt=d||curDate; return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate()); }
 function nowTime(){ const n=new Date(); return pad(n.getHours())+':'+pad(n.getMinutes()); }
 function pad(n){ return String(n).padStart(2,'0'); }
 function wareki(d){
@@ -666,12 +666,13 @@ function renderMain(){
     // meal
     const mc=rec.meal.main!==null&&rec.meal.main!==''?'<span class="cell-ok">✔</span>':'<span class="cell-empty">—</span>';
     // rec
-    const rc=rec.rec.content?'<span class="cell-ok">✔</span>':'<span class="cell-empty">—</span>';
+    const rc=rec.rec.content?(rec.rec.part==='見学'?'<span class="cell-ok">✔(見学)</span>':'<span class="cell-ok">✔</span>'):'<span class="cell-empty">—</span>';
     // notes 48h
     const now=Date.now();
     const h48=rec.notes.some(n=>(now-new Date(n.ts).getTime())<48*3600000);
     const nc=h48?'<span class="cell-red">●</span>':'<span class="cell-empty">—</span>';
     return `<tr>
+      <td style="width:40px;min-width:40px;padding:4px;" onclick="openDetail('${r.name}','notes')">${nc}</td>
       <td>
         <div class="name-wrap">
           <div>
@@ -689,7 +690,6 @@ function renderMain(){
       <td onclick="openDetail('${r.name}','bath')">${bac}</td>
       <td onclick="openDetail('${r.name}','meal')">${mc}</td>
       <td onclick="openDetail('${r.name}','rec')">${rc}</td>
-      <td onclick="openDetail('${r.name}','notes')">${nc}</td>
     </tr>`;
   }).join('');
 }
@@ -1002,11 +1002,11 @@ function doPrint(){
     rec.bath.forEach(b=>rows.push({t:b.time,cat:'入浴',body:b.type}));
     // 食事：メニューと摂取量を分けて表示
     if(rec.meal.menu||rec.meal.main!==''){
-      rows.push({t:'11:45',cat:'食事',body:'【メニュー】'+(rec.meal.menu||'—')});
-      rows.push({t:'',cat:'食事',body:'【摂取量】主食：'+rec.meal.main+'%、副食：'+rec.meal.side+'%'+(rec.meal.water?'、水分：'+rec.meal.water+'ml':'')});
+      rows.push({t:'11:45',cat:'食事',body:'主食：'+rec.meal.main+'%、副食：'+rec.meal.side+'%'+(rec.meal.water?'、水分：'+rec.meal.water+'ml':'')});
+      rows.push({t:'',cat:'メニュー',body:(rec.meal.menu||'—')});
     }
     // レク
-    if(rec.rec.content) rows.push({t:'',cat:'レク',body:rec.rec.content+(rec.rec.part?' ('+rec.rec.part+')':'')});
+    if(rec.rec.content) rows.push({t:'',cat:'レク・機能訓練',body:rec.rec.content+(rec.rec.part==='見学'?' (見学)':'')});
     // 申し送りは印刷しない
     rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:1);
     const trs=rows.map(r=>'<tr><td>'+r.t+'</td><td>'+r.cat+'</td><td>'+r.body+'</td></tr>').join('')
@@ -1037,8 +1037,8 @@ function doPrint(){
     +'.meta span{white-space:nowrap;}'
     +'.meta-name strong{font-size:11pt;border-bottom:1px solid #000;padding-right:20pt;}'
     +'table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6pt;}'
-    +'.col-time{width:44pt;}.col-cat{width:52pt;}'
-    +'th,td{padding:2pt 4pt;border:1px solid #bbb;word-break:break-all;overflow-wrap:break-word;font-size:9.5pt;line-height:1.35;vertical-align:top;}'
+    +'.col-time{width:44pt;}.col-cat{width:60pt;}'
+    +'th,td{padding:2pt 4pt;border:1px solid #bbb;word-break:break-all;overflow-wrap:break-word;white-space:pre-wrap;font-size:9.5pt;line-height:1.35;vertical-align:top;}'
     +'th{background:#f0f0f0;font-weight:bold;}'
     +'.biko{margin-bottom:6pt;}'
     +'.biko-label{font-weight:bold;font-size:9.5pt;margin-bottom:2pt;}'
