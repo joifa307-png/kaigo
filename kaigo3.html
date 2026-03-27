@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/Link1/Downloads/kaigo3_7.html -->
+<!-- saved from url=(0046)file:///C:/Users/Link1/Downloads/kaigo3_8.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -992,7 +992,7 @@ function doPrint(){
       +'<h1>介護記録（連絡帳）</h1>'
       +'<div class="meta"><span class="meta-name">利用者名　<strong>'+name+'</strong>　様</span><span>実施日　'+dateLabel+'</span></div>'
       +'<table><thead><tr><th class="col-time">時間</th><th class="col-cat">項目</th><th class="col-body">内容</th></tr></thead><tbody>'+trs+'</tbody></table>'
-      +'<div class="biko"><div class="biko-label">備考</div><div class="biko-body">'+noteText+'</div></div>'
+      +'<div class="biko"><div class="biko-label">1日の様子</div><div class="biko-body">'+rec.day+'</div></div>'
       +'<div class="next">次回利用予定日　'+nxt+'</div>'
       +'</div>';
   });
@@ -1006,6 +1006,7 @@ function doPrint(){
     +'body{font-family:\'Hiragino Sans\',\'Yu Gothic\',\'Meiryo\',sans-serif;font-size:10.5pt;line-height:1.4;}'
     +'h1{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:6pt;letter-spacing:1pt;}'
     +'.meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6pt;font-size:9.5pt;}'
+    +'.meta span{white-space:nowrap;}'
     +'.meta-name strong{font-size:11pt;border-bottom:1px solid #000;padding-right:20pt;}'
     +'table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6pt;}'
     +'.col-time{width:46pt;}.col-cat{width:42pt;}'
