@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/Link1/Downloads/kaigo3_5.html -->
+<!-- saved from url=(0046)file:///C:/Users/Link1/Downloads/kaigo3_6.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -373,16 +373,16 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
   <div class="detail-hdr">
     <button class="back-btn" onclick="goBack()">◀ 戻る</button>
     <div>
-      <div class="detail-name" id="detName">大野 ヒロコ</div>
-      <div class="detail-date" id="detDate">令和8年3月27日 (金)</div>
+      <div class="detail-name" id="detName"></div>
+      <div class="detail-date" id="detDate"></div>
     </div>
   </div>
-  <div class="tabs" id="tabBar"><button class="tab active" onclick="switchTab(&#39;vital&#39;)">バイタル</button><button class="tab" onclick="switchTab(&#39;excretion&#39;)">排泄</button><button class="tab" onclick="switchTab(&#39;bath&#39;)">入浴</button><button class="tab" onclick="switchTab(&#39;meal&#39;)">食事</button><button class="tab" onclick="switchTab(&#39;rec&#39;)">レク</button><button class="tab" onclick="switchTab(&#39;notes&#39;)">申し送り</button></div>
+  <div class="tabs" id="tabBar"></div>
   <div class="panels" id="panels">
 
     <!-- VITAL -->
-    <div class="panel active" id="pVital">
-      <div class="rec-list" id="listVital"><div class="no-rec">記録なし</div></div>
+    <div class="panel" id="pVital">
+      <div class="rec-list" id="listVital"></div>
       <div class="inp-box">
         <h4>＋ バイタル入力</h4>
         <div class="row2">
@@ -971,52 +971,50 @@ function doPrint(){
   const days=['日','月','火','水','木','金','土'];
   const dateLabel=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+days[d.getDay()]+'）';
   let pages='';
-  sel.forEach((name,idx)=>{
+  sel.forEach((name,pidx)=>{
     const rec=getRec(name,date);
     const rows=[];
-    rec.vital.forEach(v=>rows.push({t:v.time,cat:'バイタル',body:`体温：${v.temp}℃、血圧：${v.sbp}/${v.dbp}、脈拍：${v.pulse}/分${v.spo2!=='—'?'、SpO2：'+v.spo2+'%':''}`}));
-    rec.excretion.forEach(e=>rows.push({t:e.time,cat:'排泄',body:`排尿:${e.urine}、排便:${e.stool}`}));
+    rec.vital.forEach(v=>rows.push({t:v.time,cat:'バイタル',body:'体温：'+v.temp+'℃、血圧：'+v.sbp+'/'+v.dbp+'、脈拍：'+v.pulse+'/分'+(v.spo2!=='—'?'、SpO2：'+v.spo2+'%':'')}));
+    rec.excretion.forEach(e=>rows.push({t:e.time,cat:'排泄',body:'排尿:'+e.urine+'、排便:'+e.stool}));
     rec.bath.forEach(b=>rows.push({t:b.time,cat:'入浴',body:b.type}));
-    if(rec.meal.menu||rec.meal.main!=='') rows.push({t:'11:45',cat:'食事',body:`メニュー：${rec.meal.menu||'—'}、主食：${rec.meal.main}%、副食：${rec.meal.side}%${rec.meal.water?'、水分：'+rec.meal.water+'ml':''}`});
+    if(rec.meal.menu||rec.meal.main!=='') rows.push({t:'11:45',cat:'食事',body:'メニュー：'+(rec.meal.menu||'—')+'、主食：'+rec.meal.main+'%、副食：'+rec.meal.side+'%'+(rec.meal.water?'、水分：'+rec.meal.water+'ml':'')});
     if(rec.rec.content) rows.push({t:'',cat:'レク',body:rec.rec.content+(rec.rec.part?' ('+rec.rec.part+')':'')});
     rec.notes.forEach(n=>rows.push({t:fmtTs(n.ts).split(' ')[1]||'',cat:'申し送り',body:n.text}));
     rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:1);
-    const trs=rows.map(r=>`<tr><td style="padding:5px 8px;border:1px solid #bbb;white-space:nowrap;">${r.t}</td><td style="padding:5px 8px;border:1px solid #bbb;white-space:nowrap;">${r.cat}</td><td style="padding:5px 8px;border:1px solid #bbb;line-height:1.6;">${r.body}</td></tr>`).join('')||'<tr><td colspan="3" style="padding:8px;border:1px solid #bbb;color:#999;text-align:center;">記録なし</td></tr>';
+    const trs=rows.map(r=>'<tr><td style="padding:2px 5px;border:1px solid #bbb;white-space:nowrap;font-size:11px;">'+r.t+'</td><td style="padding:2px 5px;border:1px solid #bbb;white-space:nowrap;font-size:11px;">'+r.cat+'</td><td style="padding:2px 5px;border:1px solid #bbb;line-height:1.4;font-size:11px;">'+r.body+'</td></tr>').join('')||'<tr><td colspan="3" style="padding:6px;border:1px solid #bbb;color:#999;text-align:center;font-size:11px;">記録なし</td></tr>';
     const noteText=rec.notes.map(n=>n.text).join('　')||'';
-    // 次回利用日
     let nxt='—';
     const rr=db.residents.find(x=>x.name===name);
     if(rr){ for(let dd=d.getDate();dd<rr.sched.length;dd++){ if(rr.sched[dd]===1){ const nd=new Date(d.getFullYear(),d.getMonth(),dd+1); nxt=(nd.getMonth()+1)+'月'+nd.getDate()+'日（'+days[nd.getDay()]+'）'; break; }}}
-    pages+=`<div style="page-break-after:${idx<sel.length-1?'always':'auto'};padding:20px 24px;font-family:'Hiragino Sans','Yu Gothic',sans-serif;">
-      <h2 style="text-align:center;font-size:17px;font-weight:bold;margin-bottom:16px;letter-spacing:2px;">介護記録（連絡帳）</h2>
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;font-size:13px;">
-        <div>利用者名　<span style="border-bottom:1px solid #000;padding-right:50px;font-size:15px;font-weight:bold;">${name}</span>　様</div>
-        <div>実施日　${dateLabel}</div>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px;">
-        <tr style="background:#f0f0f0;"><td style="padding:6px 8px;border:1px solid #bbb;font-weight:bold;width:60px;">時間</td><td style="padding:6px 8px;border:1px solid #bbb;font-weight:bold;width:70px;">項目</td><td style="padding:6px 8px;border:1px solid #bbb;font-weight:bold;">内容</td></tr>
-        ${trs}
-      </table>
-      <div style="margin-bottom:12px;"><div style="font-weight:bold;font-size:13px;margin-bottom:4px;">備考</div><div style="border:1px solid #bbb;padding:8px;min-height:60px;font-size:13px;line-height:1.8;">${noteText}</div></div>
-      <div style="text-align:right;font-size:13px;">次回利用予定日　${nxt}</div>
-    </div>`;
+    pages+='<div style="page-break-after:'+(pidx<sel.length-1?'always':'auto')+';padding:10px 14px;">'
+      +'<h2 style="text-align:center;font-size:13px;font-weight:bold;margin-bottom:8px;">介護記録（連絡帳）</h2>'
+      +'<table style="width:100%;margin-bottom:8px;font-size:11px;"><tr>'
+      +'<td style="white-space:nowrap;">利用者名　<span style="border-bottom:1px solid #000;font-size:13px;font-weight:bold;white-space:nowrap;">'+name+'</span>　様</td>'
+      +'<td style="text-align:right;white-space:nowrap;">実施日　'+dateLabel+'</td>'
+      +'</tr></table>'
+      +'<table style="width:100%;border-collapse:collapse;margin-bottom:8px;table-layout:fixed;">'
+      +'<col style="width:50px"><col style="width:54px"><col>'
+      +'<tr style="background:#f0f0f0;"><td style="padding:2px 5px;border:1px solid #bbb;font-weight:bold;font-size:11px;">時間</td><td style="padding:2px 5px;border:1px solid #bbb;font-weight:bold;font-size:11px;">項目</td><td style="padding:2px 5px;border:1px solid #bbb;font-weight:bold;font-size:11px;">内容</td></tr>'
+      +trs
+      +'</table>'
+      +'<div style="margin-bottom:6px;"><div style="font-weight:bold;font-size:11px;margin-bottom:2px;">備考</div><div style="border:1px solid #bbb;padding:5px;font-size:11px;line-height:1.6;">'+noteText+'</div></div>'
+      +'<div style="text-align:right;font-size:11px;">次回利用予定日　'+nxt+'</div>'
+      +'</div>'
   });
-  const w=window.open('','_blank','width=900,height=700');
+  const w=window.open('','_blank','width=800,height=700');
   if(!w){ alert('ポップアップを許可してください'); return; }
-  const printHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>介護記録（連絡帳）</title>'
-    +'<style>body{margin:0;font-family:\'Hiragino Sans\',\'Yu Gothic\',sans-serif;}'
-    +'@media print{@page{size:A4;margin:10mm;}.noprint{display:none;}table{width:100%!important;}td{word-break:break-all;}}'
-    +'td{word-break:break-all;}</style>'
-    +'<style id="pgStyle"></style>'
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>介護記録（連絡帳）</title>'
+    +'<style>*{box-sizing:border-box;}body{margin:0;font-family:\'Hiragino Sans\',\'Yu Gothic\',sans-serif;}'
+    +'@media print{.noprint{display:none;}}td{word-break:break-all;word-wrap:break-word;}'
+    +'</style><style id="pgSt">@media print{@page{size:A5 portrait;margin:8mm;}}</style>'
     +'</head><body>'
-    +'<div class="noprint" style="padding:10px;background:#f5f5f5;text-align:center;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;">'
-    +'<button onclick="window.close()" style="padding:10px 18px;font-size:15px;background:#888;color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ 閉じる</button>'
-    +'<button id="sizeBtn" onclick="var s=document.getElementById(\'pgStyle\');var b=document.getElementById(\'sizeBtn\');if(b.dataset.a5!==\'1\'){s.textContent=\'@media print{@page{size:A5;margin:8mm;}}\';b.dataset.a5=\'1\';b.textContent=\'A4に切替\';}else{s.textContent=\'@media print{@page{size:A4;margin:10mm;}}\';b.dataset.a5=\'0\';b.textContent=\'A5に切替\';}" style="padding:10px 18px;font-size:15px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;">A5に切替</button>'
-    +'<button onclick="window.print()" style="padding:10px 22px;font-size:15px;background:#E87722;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 印刷/PDF</button>'
+    +'<div class="noprint" style="padding:8px;background:#f5f5f5;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;">'
+    +'<button onclick="window.close()" style="padding:8px 16px;font-size:14px;background:#888;color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ 閉じる</button>'
+    +'<button id="sb" onclick="var a=this.dataset.m!==\'a4\';document.getElementById(\'pgSt\').textContent=a?\'@media print{@page{size:A4 portrait;margin:10mm;}}\':' + "'" + '@media print{@page{size:A5 portrait;margin:8mm;}}' + "'" + ';this.dataset.m=a?\'a4\':\'a5\';this.textContent=a?\'A5に切替\':\'A4に切替\';" style="padding:8px 16px;font-size:14px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;">A4に切替</button>'
+    +'<button onclick="window.print()" style="padding:8px 18px;font-size:14px;background:#E87722;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 印刷/PDF</button>'
     +'</div>'
-    +'<div style="max-width:210mm;margin:0 auto;padding:10px;">'+ pages +'</div>'
-    +'</body></html>';
-  w.document.write(printHTML);
+    +pages
+    +'</body></html>');
   w.document.close();
 }
 
