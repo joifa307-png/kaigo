@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_13.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_14.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -156,7 +156,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
     <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
     <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
-    <button class="hdr-btn orange no-print" onclick="openPrintAll()">記録保存</button>
+    <button class="hdr-btn no-print" onclick="saveJSON()" style="background:#0F6E56;color:#fff;border-color:#0F6E56;">記録保存</button>
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -1150,15 +1150,21 @@ function handleXlsx(file){
 // (予定表読込は将来拡張用 - 現在はINIT_RESIDENTSから読み込み)
 
 // ==================== EXPORT / IMPORT ====================
-function exportData(){
-  const data = JSON.stringify(db, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+function saveJSON(){
   const now = new Date();
   const fname = '介護記録_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.json';
-  a.href = url; a.download = fname; a.click();
-  URL.revokeObjectURL(url);
+  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+  const file = new File([blob], fname, {type:'application/json'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    navigator.share({files:[file], title:fname})
+      .catch(e=>{ if(e.name!=='AbortError') alert('保存エラー: '+e.message); });
+  } else {
+    // フォールバック：通常ダウンロード
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = fname; a.click();
+    URL.revokeObjectURL(url);
+  }
 }
 function importData(input){
   const file = input.files[0];
