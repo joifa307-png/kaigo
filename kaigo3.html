@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_8.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_9.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -535,7 +535,7 @@ span.cell-ok{color:#0F6E56!important;}
       <div style="font-size:15px;">タップしてExcelを選択</div>
       <div style="font-size:13px;margin-top:4px;">利用月間予定表_YYYYMM_xxx.xlsm / .xlsx</div>
     </div>
-    <input type="file" id="xlsxFile" accept=".xlsx,.xlsm,.xls" style="display:none;" onchange="handleXlsx(this.files[0])">
+    <input type="file" id="xlsxFile" accept=".xlsx,.xlsm,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12" style="display:none;" onchange="handleXlsx(this.files[0])">
     <div id="uploadMsg" style="margin-top:12px;font-size:14px;color:var(--text2);"></div>
     <div class="ov-foot">
       <button class="ov-btn" onclick="closeOv(&#39;ovUpload&#39;)">閉じる</button>
@@ -1114,13 +1114,22 @@ function handleXlsx(file){
 // (予定表読込は将来拡張用 - 現在はINIT_RESIDENTSから読み込み)
 
 // ==================== EXPORT / IMPORT ====================
-function exportData(){
+async function exportData(){
   const data = JSON.stringify(db, null, 2);
-  const blob = new Blob([data], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
   const now = new Date();
   const fname = '介護記録_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.json';
+  const blob = new Blob([data], {type:'application/json'});
+  const file = new File([blob], fname, {type:'application/json'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file], title:'介護記録バックアップ'});
+      return;
+    }catch(e){
+      if(e.name==='AbortError') return;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url; a.download = fname; a.click();
   URL.revokeObjectURL(url);
 }
