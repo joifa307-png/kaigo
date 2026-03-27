@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_5.html -->
+<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_7.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -26,7 +26,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .screen.active{display:flex;}
 
 /* ===== HEADER ===== */
-.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.hdr{background:linear-gradient(135deg,#fff 0%,#FEF6F0 100%);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .hdr-logo{height:22px;object-fit:contain;}
 .hdr-center{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;}
 .hdr-date{font-size:17px;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:var(--r2);border:1px solid var(--border2);}
@@ -49,12 +49,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .name-sub{font-size:12px;color:var(--text3);}
 .del-btn{background:var(--red-bg);color:var(--red);border:1px solid #F7C1C1;border-radius:6px;padding:3px 8px;font-size:13px;cursor:pointer;flex-shrink:0;}
 .cell-ok{color:#0F6E56!important;font-size:18px;font-weight:600;}
+.tbl td .cell-ok{color:#0F6E56!important;}
 .cell-val{font-size:17px;line-height:1.5;}
 .cell-empty{color:var(--border2);font-size:18px;}
 .cell-red{color:var(--red);font-size:22px;}
 
 /* ===== DETAIL SCREEN ===== */
-.detail-hdr{background:var(--white);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.detail-hdr{background:linear-gradient(135deg,#fff 0%,#FEF6F0 100%);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .back-btn{background:var(--orange-bg);color:var(--orange2);border:1px solid #F5C49A;border-radius:var(--r2);padding:8px 14px;font-size:16px;cursor:pointer;white-space:nowrap;}
 .detail-name{font-size:20px;font-weight:600;flex:1;}
 .detail-date{font-size:13px;color:var(--text3);}
@@ -62,7 +63,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 /* ===== TABS ===== */
 .tabs{display:flex;background:var(--white);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;}
 .tab{padding:11px 16px;font-size:17px;border:none;background:none;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;flex-shrink:0;}
-.tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:600;}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:700;background:var(--orange-bg);}
 
 /* ===== TAB PANELS ===== */
 .panels{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;}
@@ -80,7 +81,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .chip.on{background:var(--orange);color:#fff;border-color:var(--orange);}
 
 /* ===== INPUT SECTION ===== */
-.inp-box{background:var(--orange-bg);border-radius:var(--r);padding:16px;border:1px solid #F5C49A;}
+.inp-box{background:linear-gradient(135deg,#FEF6F0 0%,#FDF0E8 100%);border-radius:var(--r);padding:16px;border:1px solid #F5C49A;box-shadow:0 2px 8px rgba(232,119,34,.08);}
 .inp-box h4{font-size:17px;font-weight:600;color:var(--orange2);margin-bottom:14px;}
 .fg{margin-bottom:14px;}
 .fg label{font-size:18px;color:var(--text2);display:block;margin-bottom:7px;font-weight:500;}
@@ -96,7 +97,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;}
-.save-btn{width:100%;padding:15px;background:var(--orange);color:#fff;border:none;border-radius:var(--r2);font-size:22px;font-weight:600;cursor:pointer;margin-top:8px;}
+.save-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--orange) 0%,var(--orange2) 100%);color:#fff;border:none;border-radius:var(--r2);font-size:22px;font-weight:600;cursor:pointer;margin-top:8px;box-shadow:0 3px 10px rgba(232,119,34,.3);}
 .save-btn:active{background:var(--orange2);}
 .all-btn{padding:8px 14px;background:var(--blue-bg);color:var(--blue);border:1px solid #B5D4F4;border-radius:var(--r2);font-size:14px;cursor:pointer;}
 
@@ -150,12 +151,12 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div class="hdr-date" id="dateDisp" onclick="openCal()">令和8年3月27日 (金)</div>
       <button class="hdr-btn nav" onclick="moveDay(1)">▶</button>
     </div>
-    <button class="hdr-btn no-print" onclick="exportData()">書き出し</button>
-    <button class="hdr-btn no-print" onclick="document.getElementById(&#39;importFile&#39;).click()">読み込み</button>
+    <button class="hdr-btn no-print" onclick="exportData()">💾 書き出し</button>
+    <button class="hdr-btn no-print" onclick="document.getElementById(&#39;importFile&#39;).click()">📥 読み込み</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
-    <button class="hdr-btn no-print" onclick="openUpload()">予定表読込</button>
-    <button class="hdr-btn no-print" onclick="openAdd()">利用者追加</button>
-    <button class="hdr-btn orange no-print" onclick="openPrint()">連絡帳</button>
+    <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
+    <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
+    <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -371,7 +372,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 <!-- ==================== DETAIL SCREEN ==================== -->
 <div class="screen" id="detailScreen">
   <div class="detail-hdr">
-    <button class="back-btn" onclick="goBack()">◀ 戻る</button>
+    <button class="back-btn" onclick="goBack()">◀ メイン</button>
     <div>
       <div class="detail-name" id="detName"></div>
       <div class="detail-date" id="detDate"></div>
@@ -700,13 +701,13 @@ function moveDay(d){
 
 // ==================== DETAIL SCREEN ====================
 const TABS=[
-  {id:'vital',label:'バイタル'},
-  {id:'excretion',label:'排泄'},
-  {id:'bath',label:'入浴'},
-  {id:'meal',label:'食事'},
-  {id:'rec',label:'レク'},
-  {id:'notes',label:'申し送り'},
-  {id:'day',label:'1日の様子'},
+  {id:'vital',label:'🌡 バイタル'},
+  {id:'excretion',label:'🚽 排泄'},
+  {id:'bath',label:'🛁 入浴'},
+  {id:'meal',label:'🍱 食事'},
+  {id:'rec',label:'🎯 レク'},
+  {id:'notes',label:'📝 申し送り'},
+  {id:'day',label:'☀️ 1日の様子'},
 ];
 function openDetail(name, tab){
   curRes=name; curTab=tab||'vital';
@@ -1006,7 +1007,7 @@ function doPrint(){
       rows.push({t:'',cat:'メニュー',body:(rec.meal.menu||'—')});
     }
     // レク
-    if(rec.rec.content) rows.push({t:'',cat:'レク・機能訓練',body:rec.rec.content+(rec.rec.part==='見学'?' (見学)':'')});
+    if(rec.rec.content) rows.push({t:'',cat:'レク・\n機能訓練',body:rec.rec.content+(rec.rec.part==='見学'?' (見学)':'')});
     // 申し送りは印刷しない
     rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:1);
     const trs=rows.map(r=>'<tr><td>'+r.t+'</td><td>'+r.cat+'</td><td>'+r.body+'</td></tr>').join('')
@@ -1042,7 +1043,7 @@ function doPrint(){
     +'th{background:#f0f0f0;font-weight:bold;}'
     +'.biko{margin-bottom:6pt;}'
     +'.biko-label{font-weight:bold;font-size:9.5pt;margin-bottom:2pt;}'
-    +'.biko-body{border:1px solid #bbb;padding:4pt;font-size:9.5pt;line-height:1.6;min-height:24pt;}'
+    +'.biko-body{border:1px solid #bbb;padding:4pt;font-size:9.5pt;line-height:1.6;min-height:24pt;white-space:pre-wrap;}'
     +'.next{text-align:right;font-size:9pt;}'
     +'.noprint{padding:8px;background:#f5f5f5;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;}'
     +'@media screen{'
