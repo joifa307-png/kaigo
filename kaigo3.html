@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/link1/Downloads/kaigo3_9.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_11.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -48,9 +48,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .name-txt{font-size:22px;font-weight:500;}
 .name-sub{font-size:12px;color:var(--text3);}
 .del-btn{background:var(--red-bg);color:var(--red);border:1px solid #F7C1C1;border-radius:6px;padding:3px 8px;font-size:13px;cursor:pointer;flex-shrink:0;}
-.cell-ok{color:#0F6E56!important;font-size:20px;font-weight:700;}
-.tbl td .cell-ok{color:#0F6E56!important;font-size:20px;font-weight:700;}
-span.cell-ok{color:#0F6E56!important;}
+.cell-ok{color:#0F6E56!important;font-size:18px;font-weight:600;}
+.tbl td .cell-ok{color:#0F6E56!important;}
 .cell-val{font-size:17px;line-height:1.5;}
 .cell-empty{color:var(--border2);font-size:18px;}
 .cell-red{color:var(--red);font-size:22px;}
@@ -158,6 +157,7 @@ span.cell-ok{color:#0F6E56!important;}
     <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
     <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
     <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
+    <button class="hdr-btn no-print" onclick="saveAllPrint()" style="background:#0F6E56;color:#fff;border-color:#0F6E56;">📤 連絡帳保存</button>
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -535,7 +535,7 @@ span.cell-ok{color:#0F6E56!important;}
       <div style="font-size:15px;">タップしてExcelを選択</div>
       <div style="font-size:13px;margin-top:4px;">利用月間予定表_YYYYMM_xxx.xlsm / .xlsx</div>
     </div>
-    <input type="file" id="xlsxFile" accept=".xlsx,.xlsm,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-excel.sheet.macroEnabled.12" style="display:none;" onchange="handleXlsx(this.files[0])">
+    <input type="file" id="xlsxFile" accept=".xlsx,.xlsm,.xls" style="display:none;" onchange="handleXlsx(this.files[0])">
     <div id="uploadMsg" style="margin-top:12px;font-size:14px;color:var(--text2);"></div>
     <div class="ov-foot">
       <button class="ov-btn" onclick="closeOv(&#39;ovUpload&#39;)">閉じる</button>
@@ -666,9 +666,9 @@ function renderMain(){
     // bath
     const bac=rec.bath.length?'<span class="cell-red">○</span>':'<span class="cell-empty">—</span>';
     // meal
-    const mc=rec.meal.menu?'<span class="cell-ok" style="color:#0F6E56;">✔</span>':'<span class="cell-empty">—</span>';
+    const mc=rec.meal.menu?'<span class="cell-ok">✔</span>':'<span class="cell-empty">—</span>';
     // rec
-    const rc=rec.rec.content?'<span class="cell-ok" style="color:#0F6E56;">✔</span>':'<span class="cell-empty">—</span>';
+    const rc=rec.rec.content?'<span class="cell-ok">✔</span>':'<span class="cell-empty">—</span>';
     // notes 48h
     const now=Date.now();
     const h48=rec.notes.some(n=>(now-new Date(n.ts).getTime())<48*3600000);
@@ -1070,6 +1070,82 @@ function doPrint(){
   w.document.close();
 }
 
+// ==================== 連絡帳保存（Web Share API → Google Drive） ====================
+function saveAllPrint(){
+  const res = todayRes();
+  if(!res.length){ alert('本日の利用者がいません'); return; }
+  const d = curDate;
+  const days = ['日','月','火','水','木','金','土'];
+  const date = dk();
+  const dateLabel = d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+days[d.getDay()]+'）';
+  let pages = '';
+  res.forEach((r, pidx) => {
+    const name = r.name;
+    const rec = getRec(name, date);
+    const rows = [];
+    rec.vital.forEach(v=>rows.push({t:v.time,cat:'バイタル',body:'体温：'+v.temp+'℃、血圧：'+v.sbp+'/'+v.dbp+'、脈拍：'+v.pulse+'/分'+(v.spo2!=='—'?'、SpO2：'+v.spo2+'%':'')}));
+    rec.excretion.forEach(e=>rows.push({t:e.time,cat:'排泄',body:'排尿:'+e.urine+'、排便:'+e.stool}));
+    rec.bath.forEach(b=>rows.push({t:b.time,cat:'入浴',body:b.type}));
+    if(rec.meal.menu||rec.meal.main!==''){
+      rows.push({t:'11:45',cat:'食事',body:'主食：'+rec.meal.main+'%、副食：'+rec.meal.side+'%'+(rec.meal.water?'、水分：'+rec.meal.water+'ml':'')});
+      rows.push({t:'',cat:'メニュー',body:(rec.meal.menu||'—')});
+    }
+    if(rec.rec.content) rows.push({t:'',cat:'レク・\n機能訓練',body:rec.rec.content+(rec.rec.part==='見学'?' (見学)':'')});
+    rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:1);
+    const trs = rows.map(r=>'<tr><td>'+r.t+'</td><td>'+r.cat+'</td><td>'+r.body+'</td></tr>').join('')
+      ||'<tr><td colspan="3" style="text-align:center;color:#999;">記録なし</td></tr>';
+    const dayText = rec.day||'';
+    let nxt = '—';
+    const rr = db.residents.find(x=>x.name===name);
+    if(rr){ for(let dd=d.getDate();dd<rr.sched.length;dd++){ if(rr.sched[dd]===1){ const nd=new Date(d.getFullYear(),d.getMonth(),dd+1); nxt=(nd.getMonth()+1)+'月'+nd.getDate()+'日（'+days[nd.getDay()]+'）'; break; }}}
+    const isLast = pidx===res.length-1;
+    pages += '<div class="page'+(isLast?' last':'')+'">'
+      +'<h1>介護記録（連絡帳）</h1>'
+      +'<div class="meta"><span class="meta-name">利用者名　<strong>'+name+'</strong>　様</span><span class="meta-date">'+dateLabel+'</span></div>'
+      +'<table><thead><tr><th class="col-time">時間</th><th class="col-cat">項目</th><th class="col-body">内容</th></tr></thead><tbody>'+trs+'</tbody></table>'
+      +'<div class="biko"><div class="biko-label">1日の様子</div><div class="biko-body">'+dayText+'</div></div>'
+      +'<div class="next">次回利用予定日　'+nxt+'</div>'
+      +'</div>';
+  });
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>連絡帳_'+date+'</title>'
+    +'<style>'
+    +'*{box-sizing:border-box;margin:0;padding:0;}'
+    +'body{font-family:\'Hiragino Sans\',\'Yu Gothic\',\'Meiryo\',sans-serif;font-size:10.5pt;line-height:1.4;}'
+    +'h1{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:6pt;letter-spacing:1pt;}'
+    +'.meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6pt;font-size:9.5pt;}'
+    +'.meta span{white-space:nowrap;}'
+    +'.meta-name strong{font-size:11pt;border-bottom:1px solid #000;padding-right:20pt;}'
+    +'table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:6pt;}'
+    +'.col-time{width:44pt;}.col-cat{width:60pt;}'
+    +'th,td{padding:2pt 4pt;border:1px solid #bbb;word-break:break-all;overflow-wrap:break-word;white-space:pre-wrap;font-size:9.5pt;line-height:1.35;vertical-align:top;}'
+    +'th{background:#f0f0f0;font-weight:bold;}'
+    +'.biko{margin-bottom:6pt;}'
+    +'.biko-label{font-weight:bold;font-size:9.5pt;margin-bottom:2pt;}'
+    +'.biko-body{border:1px solid #bbb;padding:4pt;font-size:9.5pt;line-height:1.6;min-height:24pt;white-space:pre-wrap;}'
+    +'.next{text-align:right;font-size:9pt;}'
+    +'@media print{'
+    +'@page{size:A5 portrait;margin:8mm;}'
+    +'html,body{margin:0;padding:0;}'
+    +'.page{width:100%;margin:0;padding:0;page-break-after:always;break-after:page;}'
+    +'.page.last{page-break-after:auto;break-after:auto;}'
+    +'}'
+    +'</style></head><body>'+pages+'</body></html>';
+  // Web Share API でファイルを共有（iOS Safari対応）
+  const fname = '連絡帳_'+date.replace(/-/g,'')+'.html';
+  const blob = new Blob([html], {type:'text/html'});
+  const file = new File([blob], fname, {type:'text/html'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    navigator.share({files:[file], title:fname})
+      .catch(e=>{ if(e.name!=='AbortError') alert('保存エラー: '+e.message); });
+  } else {
+    // フォールバック：通常ダウンロード
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = fname; a.click();
+    URL.revokeObjectURL(url);
+  }
+}
+
 // ==================== EXCEL UPLOAD ====================
 function openUpload(){ document.getElementById('ovUpload').classList.add('show'); }
 function handleXlsx(file){
@@ -1114,22 +1190,13 @@ function handleXlsx(file){
 // (予定表読込は将来拡張用 - 現在はINIT_RESIDENTSから読み込み)
 
 // ==================== EXPORT / IMPORT ====================
-async function exportData(){
+function exportData(){
   const data = JSON.stringify(db, null, 2);
-  const now = new Date();
-  const fname = '介護記録_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.json';
   const blob = new Blob([data], {type:'application/json'});
-  const file = new File([blob], fname, {type:'application/json'});
-  if(navigator.canShare && navigator.canShare({files:[file]})){
-    try{
-      await navigator.share({files:[file], title:'介護記録バックアップ'});
-      return;
-    }catch(e){
-      if(e.name==='AbortError') return;
-    }
-  }
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
+  const now = new Date();
+  const fname = '介護記録_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.json';
   a.href = url; a.download = fname; a.click();
   URL.revokeObjectURL(url);
 }
