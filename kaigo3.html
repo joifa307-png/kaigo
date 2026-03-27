@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_12.html -->
+<!-- saved from url=(0047)file:///C:/Users/link1/Downloads/kaigo3_13.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -151,13 +151,12 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div class="hdr-date" id="dateDisp" onclick="openCal()">令和8年3月27日 (金)</div>
       <button class="hdr-btn nav" onclick="moveDay(1)">▶</button>
     </div>
-    <button class="hdr-btn no-print" onclick="exportData()">💾 書き出し</button>
     <button class="hdr-btn no-print" onclick="document.getElementById(&#39;importFile&#39;).click()">📥 読み込み</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
     <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
     <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
     <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
-    <button class="hdr-btn no-print" onclick="saveAllPrint()" style="background:#0F6E56;color:#fff;border-color:#0F6E56;">📤 連絡帳保存</button>
+    <button class="hdr-btn orange no-print" onclick="openPrintAll()">記録保存</button>
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
@@ -982,6 +981,12 @@ function openPrint(){
   document.getElementById('pDate').value=dk();
   const cont=document.getElementById('pResidents');
   cont.innerHTML=todayRes().map(r=>`<button class="chk-btn" onclick="this.classList.toggle('on')">${r.name}</button>`).join('');
+  document.getElementById('ovPrint').classList.add('show');
+}
+function openPrintAll(){
+  document.getElementById('pDate').value=dk();
+  const cont=document.getElementById('pResidents');
+  cont.innerHTML=todayRes().map(r=>`<button class="chk-btn on" onclick="this.classList.toggle('on')">${r.name}</button>`).join('');
   document.getElementById('ovPrint').classList.add('show');
 }
 function buildPrintPages(sel, date){
