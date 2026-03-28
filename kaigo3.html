@@ -131,6 +131,18 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .cal-day.has{position:relative;}
 .cal-day.has::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--green);border-radius:50%;}
 
+/* ===== EDIT BUTTON ===== */
+.rec-edit{background:none;border:1px solid var(--border2);color:var(--text3);font-size:14px;cursor:pointer;padding:2px 8px;border-radius:5px;margin-left:4px;flex-shrink:0;}
+.rec-edit:active{background:var(--gray2);}
+
+/* ===== DAY CHIPS ===== */
+.chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.chip.on{background:var(--orange);color:#fff;border-color:var(--orange);}
+.phrase-list-item{display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border);}
+.phrase-list-item:last-child{border-bottom:none;}
+.phrase-list-text{flex:1;font-size:15px;}
+.phrase-del-btn{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 4px;}
+
 /* ===== PRINT ===== */
 @media print{
   .screen{display:block!important;height:auto!important;}
@@ -298,6 +310,11 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 
     <!-- DAY SUMMARY -->
     <div class="panel" id="pDay">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:15px;color:var(--text2);font-weight:500;">定型文チップ</div>
+        <button class="all-btn" onclick="openDayPhraseEdit()">✎ 文言編集</button>
+      </div>
+      <div class="chip-area" id="dayChips"></div>
       <div class="inp-box">
         <h4>1日の様子</h4>
         <div class="fg"><textarea id="dayText" placeholder="例：午前中は機嫌よく過ごされました。食欲もあり完食されました。" rows="6"></textarea></div>
@@ -364,6 +381,21 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <div class="ov-foot">
       <button class="ov-btn" onclick="closeOv('ovPrint')">閉じる</button>
       <button class="ov-btn orange" onclick="doPrint()">印刷・PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DAY PHRASE EDIT OVERLAY ==================== -->
+<div class="ov" id="ovDayPhrase">
+  <div class="ov-box">
+    <div class="ov-title">1日の様子 文言管理</div>
+    <div id="dayPhraseList" style="max-height:50vh;overflow-y:auto;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:8px;">
+      <input type="text" id="newPhraseInput" placeholder="新しい文言を入力..." style="flex:1;padding:10px;border:1px solid var(--border2);border-radius:var(--r2);font-size:15px;font-family:inherit;">
+      <button class="ov-btn orange" onclick="addDayPhrase()">追加</button>
+    </div>
+    <div class="ov-foot">
+      <button class="ov-btn orange" onclick="closeOv('ovDayPhrase')">閉じる</button>
     </div>
   </div>
 </div>
@@ -552,7 +584,7 @@ function refreshPanel(tab){
   const rec=getRec(curRes);
   if(tab==='vital'){
     document.getElementById('listVital').innerHTML=rec.vital.length?
-      rec.vital.map((v,i)=>`<div class="rec-item"><span class="rec-time">${v.time}</span><div class="rec-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div><button class="rec-del" onclick="delVital(${i})">✕</button></div>`).join(''):
+      rec.vital.map((v,i)=>`<div class="rec-item"><span class="rec-time">${v.time}</span><div class="rec-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div><button class="rec-edit" onclick="editVital(${i})">✎</button><button class="rec-del" onclick="delVital(${i})">✕</button></div>`).join(''):
       '<div class="no-rec">記録なし</div>';
     document.getElementById('vTime').value=nowTime();
     document.getElementById('vTemp').value='';
@@ -563,7 +595,7 @@ function refreshPanel(tab){
   }
   else if(tab==='excretion'){
     document.getElementById('listEx').innerHTML=rec.excretion.length?
-      rec.excretion.map((e,i)=>`<div class="rec-item"><span class="rec-time">${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${e.stool}</div><button class="rec-del" onclick="delEx(${i})">✕</button></div>`).join(''):
+      rec.excretion.map((e,i)=>`<div class="rec-item"><span class="rec-time">${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${e.stool}</div><button class="rec-edit" onclick="editEx(${i})">✎</button><button class="rec-del" onclick="delEx(${i})">✕</button></div>`).join(''):
       '<div class="no-rec">記録なし</div>';
     document.getElementById('exTime').value=nowTime();
     document.getElementById('exUrine').value='なし';
@@ -571,7 +603,7 @@ function refreshPanel(tab){
   }
   else if(tab==='bath'){
     document.getElementById('listBath').innerHTML=rec.bath.length?
-      rec.bath.map((b,i)=>`<div class="rec-item"><span class="rec-time">${b.time}</span><div class="rec-body">${b.type}</div><button class="rec-del" onclick="delBath(${i})">✕</button></div>`).join(''):
+      rec.bath.map((b,i)=>`<div class="rec-item"><span class="rec-time">${b.time}</span><div class="rec-body">${b.type}</div><button class="rec-edit" onclick="editBath(${i})">✎</button><button class="rec-del" onclick="delBath(${i})">✕</button></div>`).join(''):
       '<div class="no-rec">記録なし</div>';
     document.getElementById('baTime').value=nowTime();
     document.getElementById('baType').value='普通浴';
@@ -599,6 +631,13 @@ function refreshPanel(tab){
   }
   else if(tab==='day'){
     document.getElementById('dayText').value=getRec(curRes).day||'';
+    // チップを描画
+    const dayChipsEl = document.getElementById('dayChips');
+    const phrases = loadDayPhrases();
+    const curText = getRec(curRes).day||'';
+    dayChipsEl.innerHTML = phrases.map((p,i)=>
+      `<button class="chip${curText.includes(p)?' on':''}" onclick="toggleDayChip(this,'${p.replace(/'/g,"\\'")}',${i})">${p}</button>`
+    ).join('');
   }
   else if(tab==='notes'){
     const now=Date.now();
@@ -611,7 +650,10 @@ function refreshPanel(tab){
         return `<div class="note-item" style="${within?'':'border-color:var(--border2);background:var(--gray1);'}">
           <div class="note-meta">${fmtTs(n.ts)} (${ag})</div>
           <div class="note-text">${n.text}</div>
-          <button class="rec-del" style="margin-top:6px;" onclick="delNote(${rec.notes.length-1-i})">✕ 削除</button>
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="rec-edit" onclick="editNote(${rec.notes.length-1-i})">✎ 編集</button>
+            <button class="rec-del" onclick="delNote(${rec.notes.length-1-i})">✕ 削除</button>
+          </div>
         </div>`;
       }).join(''):
       '<div class="no-rec">申し送りなし</div>';
@@ -722,6 +764,151 @@ function saveNote(){
   saveDB(); goBack();
 }
 function delNote(i){ if(!confirm('削除しますか？'))return; getRec(curRes).notes.splice(i,1); saveDB(); refreshPanel('notes'); }
+
+// ==================== EDIT FUNCTIONS ====================
+function editVital(i){
+  const rec=getRec(curRes);
+  const v=rec.vital[i];
+  const newTime=prompt('時刻を入力 (例: 09:30)',v.time);
+  if(newTime===null) return;
+  const rawTemp=prompt('体温を入力 (例: 36.5)',v.temp);
+  if(rawTemp===null) return;
+  let tempRaw=rawTemp.replace(/[^0-9.]/g,'');
+  const digits=tempRaw.replace('.','');
+  if(digits.length>=3&&!tempRaw.includes('.')) tempRaw=digits.slice(0,2)+'.'+digits.slice(2,3);
+  const temp=parseFloat(tempRaw);
+  if(isNaN(temp)||temp<30||temp>42){ alert('体温を正しく入力してください（例：36.5）'); return; }
+  const sbp=prompt('収縮期血圧',v.sbp)||'—';
+  const dbp=prompt('拡張期血圧',v.dbp)||'—';
+  const pulse=prompt('脈拍',v.pulse)||'—';
+  const spo2=prompt('SpO2 (%)',v.spo2)||'—';
+  rec.vital[i]={time:newTime||v.time,temp,sbp,dbp,pulse,spo2};
+  saveDB(); refreshPanel('vital');
+}
+
+function editEx(i){
+  const rec=getRec(curRes);
+  const e=rec.excretion[i];
+  const newTime=prompt('時刻を入力',e.time);
+  if(newTime===null) return;
+  const urineOpts=['なし','少量','中量','大量'];
+  const stoolOpts=['なし','少量','中量','大量'];
+  const urineStr=urineOpts.join(' / ');
+  const stoolStr=stoolOpts.join(' / ');
+  const newUrine=prompt('排尿 ('+urineStr+')',e.urine);
+  if(newUrine===null) return;
+  const newStool=prompt('排便 ('+stoolStr+')',e.stool);
+  if(newStool===null) return;
+  rec.excretion[i]={time:newTime||e.time,urine:urineOpts.includes(newUrine)?newUrine:e.urine,stool:stoolOpts.includes(newStool)?newStool:e.stool};
+  saveDB(); refreshPanel('excretion');
+}
+
+function editBath(i){
+  const rec=getRec(curRes);
+  const b=rec.bath[i];
+  const newTime=prompt('時刻を入力',b.time);
+  if(newTime===null) return;
+  const typeOpts=['普通浴','シャワー浴','清拭','入浴なし'];
+  const typeStr=typeOpts.join(' / ');
+  const newType=prompt('種別 ('+typeStr+')',b.type);
+  if(newType===null) return;
+  rec.bath[i]={time:newTime||b.time,type:typeOpts.includes(newType)?newType:b.type};
+  saveDB(); refreshPanel('bath');
+}
+
+function editNote(i){
+  const rec=getRec(curRes);
+  const n=rec.notes[i];
+  const newText=prompt('申し送りを編集',n.text);
+  if(newText===null) return;
+  if(!newText.trim()){ alert('内容を入力してください'); return; }
+  rec.notes[i]={ts:n.ts,text:newText.trim()};
+  saveDB(); refreshPanel('notes');
+}
+
+// ==================== DAY PHRASES ====================
+const DEFAULT_DAY_PHRASES = [
+  '午前中は機嫌よく過ごされました。',
+  '午後は穏やかに過ごされました。',
+  '食欲があり完食されました。',
+  '食欲がやや低下していました。',
+  '水分摂取良好でした。',
+  '水分摂取が少なめでした。',
+  'レクリエーションに積極的に参加されました。',
+  'レクリエーションは見学されました。',
+  '他の利用者と楽しく会話されていました。',
+  '少し疲れた様子が見られました。',
+  '体調は良好でした。',
+  '軽度の咳が見られました。',
+  '排泄は問題なく行えました。',
+  '入浴は気持ちよさそうにされていました。',
+  '送迎時、笑顔で乗車されました。',
+  '送迎時、御家族に見送られ乗車されました。',
+  'ご帰宅時、お元気にお帰りになりました。',
+  '本日もご利用いただきありがとうございました。',
+  '転倒等の事故はありませんでした。',
+  'スタッフと楽しくお話されていました。',
+  '午前中、体操に参加されました。',
+  '手芸・工作に楽しんで取り組まれました。',
+  '音楽に合わせて体を動かされました。',
+  '日中は落ち着いて過ごされました。',
+  '次回のご利用をお待ちしております。'
+];
+
+function loadDayPhrases(){
+  try{
+    const s=localStorage.getItem('dayPhrases');
+    return s?JSON.parse(s):DEFAULT_DAY_PHRASES.slice();
+  }catch(e){ return DEFAULT_DAY_PHRASES.slice(); }
+}
+function saveDayPhrases(phrases){
+  localStorage.setItem('dayPhrases',JSON.stringify(phrases));
+}
+
+function toggleDayChip(el, phrase){
+  el.classList.toggle('on');
+  const ta=document.getElementById('dayText');
+  if(el.classList.contains('on')){
+    // テキストエリアに追記
+    const cur=ta.value;
+    ta.value=cur+(cur&&!cur.endsWith('\n')?'\n':'')+phrase;
+  } else {
+    // 削除
+    ta.value=ta.value.split('\n').filter(line=>line!==phrase).join('\n');
+  }
+}
+
+function openDayPhraseEdit(){
+  renderDayPhraseList();
+  document.getElementById('newPhraseInput').value='';
+  document.getElementById('ovDayPhrase').classList.add('show');
+}
+
+function renderDayPhraseList(){
+  const phrases=loadDayPhrases();
+  document.getElementById('dayPhraseList').innerHTML=phrases.length?
+    phrases.map((p,i)=>`<div class="phrase-list-item"><span class="phrase-list-text">${p}</span><button class="phrase-del-btn" onclick="delDayPhrase(${i})">✕</button></div>`).join(''):
+    '<div style="padding:12px;color:var(--text3);font-size:14px;">文言がありません。下のフォームから追加してください。</div>';
+}
+
+function addDayPhrase(){
+  const inp=document.getElementById('newPhraseInput');
+  const text=inp.value.trim();
+  if(!text){ alert('文言を入力してください'); return; }
+  const phrases=loadDayPhrases();
+  phrases.push(text);
+  saveDayPhrases(phrases);
+  inp.value='';
+  renderDayPhraseList();
+}
+
+function delDayPhrase(i){
+  if(!confirm('この文言を削除しますか？')) return;
+  const phrases=loadDayPhrases();
+  phrases.splice(i,1);
+  saveDayPhrases(phrases);
+  renderDayPhraseList();
+}
 function saveDay(){
   const text=document.getElementById('dayText').value;
   getRec(curRes).day=text;
