@@ -137,7 +137,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .rec-edit:active{background:var(--gray2);}
 
 /* ===== DAY CHIPS ===== */
-.chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto;}
+.inp-box{position:sticky;bottom:0;background:var(--bg);padding-top:8px;}
 .chip.on{background:var(--orange);color:#fff;border-color:var(--orange);}
 .phrase-list-item{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border);min-height:44px;}
 .phrase-list-item:last-child{border-bottom:none;}
