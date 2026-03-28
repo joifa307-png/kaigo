@@ -138,10 +138,10 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 /* ===== DAY CHIPS ===== */
 .chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
 .chip.on{background:var(--orange);color:#fff;border-color:var(--orange);}
-.phrase-list-item{display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border);}
+.phrase-list-item{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border);min-height:44px;}
 .phrase-list-item:last-child{border-bottom:none;}
-.phrase-list-text{flex:1;font-size:15px;}
-.phrase-del-btn{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 4px;}
+.phrase-list-text{flex:1;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.phrase-del-btn{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;}
 
 /* ===== PRINT ===== */
 @media print{
@@ -828,31 +828,31 @@ function editNote(i){
 
 // ==================== DAY PHRASES ====================
 const DEFAULT_DAY_PHRASES = [
-  '午前中は機嫌よく過ごされました。',
-  '午後は穏やかに過ごされました。',
-  '食欲があり完食されました。',
-  '食欲がやや低下していました。',
-  '水分摂取良好でした。',
-  '水分摂取が少なめでした。',
-  'レクリエーションに積極的に参加されました。',
-  'レクリエーションは見学されました。',
-  '他の利用者と楽しく会話されていました。',
-  '少し疲れた様子が見られました。',
-  '体調は良好でした。',
-  '軽度の咳が見られました。',
-  '排泄は問題なく行えました。',
-  '入浴は気持ちよさそうにされていました。',
-  '送迎時、笑顔で乗車されました。',
-  '送迎時、御家族に見送られ乗車されました。',
-  'ご帰宅時、お元気にお帰りになりました。',
-  '本日もご利用いただきありがとうございました。',
-  '転倒等の事故はありませんでした。',
-  'スタッフと楽しくお話されていました。',
-  '午前中、体操に参加されました。',
-  '手芸・工作に楽しんで取り組まれました。',
-  '音楽に合わせて体を動かされました。',
-  '日中は落ち着いて過ごされました。',
-  '次回のご利用をお待ちしております。'
+  'お元気に笑顔で来所されました。',
+  'お元気に来所され、自ら皆さんに挨拶をされていました。',
+  'バイタル、安定されています。',
+  '到着後、早速塗り絵を始められました。',
+  '午前中は塗り絵を熱心にされていました。',
+  '入浴は問題なく気持ちよさそうに入られていました。',
+  '入浴はスッキリされたようで、「気持ちよかった」と言われていました。',
+  '午後からの体操ではいつも以上に元気に手足を動かされました。',
+  '午後からの体操では、マイペースで手足を動かされていました。',
+  '午後からの体操では、できる範囲で手足を動かされていました。',
+  '午後からの体操では、いつもより動きが鈍いように感じました。',
+  '　では、興奮しながら楽しまれていました。',
+  'カラオケでは最初は照れながらもしっかりと歌われていました。',
+  'カラオケでは、皆さんの歌を手拍子しながら真剣にきかれていました。',
+  'その後は、来月カレンダー作りを真剣にされていました。',
+  'その後は皆さんでトランプをしました、真剣にカードを見つめられていました',
+  '今日は足の浮腫があり、立位や歩行時にややふらつきがありました。',
+  'おやつの　を喜んで食べておられました。',
+  'おやつの　は、何度もおいしいと言って頂きました。',
+  '他利用者と協力し、パズルをされていました。',
+  '他利用者や職員と昔話で盛り上がり、大笑いされていました。',
+  'その後は、テレビ鑑賞や団らんでゆっくり過ごして頂きました。',
+  '1日を通して、退屈なく過ごされています。',
+  '1日を通して笑顔がよく見られました',
+  '1日を通して、いつもよりやや元気がないように感じられました。'
 ];
 
 function loadDayPhrases(){
