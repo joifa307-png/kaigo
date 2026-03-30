@@ -12,7 +12,7 @@
 :root{
   --bg:#F5F4F0;--white:#fff;--gray1:#F0EEE8;--gray2:#E0DDD6;--gray3:#B0ADA6;
   --text:#1A1916;--text2:#5C5A54;--text3:#9E9C94;
-  --orange:#E87722;--orange2:#C45F0A;--orange-bg:#FEF0E6;h
+  --orange:#E87722;--orange2:#C45F0A;--orange-bg:#FEF0E6;
   --blue:#185FA5;--blue-bg:#E6F1FB;
   --green:#0F6E56;--green-bg:#E1F5EE;
   --red:#A32D2D;--red-bg:#FCEBEB;
@@ -44,8 +44,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .tbl tr:nth-child(odd){background:var(--white);}
 .tbl tr:nth-child(even){background:#F7F6F2;}
 .tbl tr:active td{background:var(--blue-bg)!important;}
-.name-wrap{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:130px;}
-.name-txt{font-size:22px;font-weight:500;}
+.name-wrap{display:flex;align-items:center;justify-content:space-between;gap:4px;min-width:88px;}
+.name-txt{font-size:18px;font-weight:500;}
 .name-sub{font-size:12px;color:var(--text3);}
 .del-btn{background:var(--red-bg);color:var(--red);border:1px solid #F7C1C1;border-radius:6px;padding:3px 8px;font-size:13px;cursor:pointer;flex-shrink:0;}
 .cell-ok{color:#0F6E56!important;font-size:18px;font-weight:600;}
@@ -53,6 +53,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .cell-val{font-size:17px;line-height:1.5;}
 .cell-empty{color:var(--border2);font-size:18px;}
 .cell-red{color:var(--red);font-size:22px;}
+.cell-warn{color:var(--red);font-size:17px;font-weight:600;line-height:1.5;}
 
 /* ===== DETAIL SCREEN ===== */
 .detail-hdr{background:linear-gradient(135deg,#fff 0%,#FEF6F0 100%);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
@@ -137,8 +138,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .rec-edit:active{background:var(--gray2);}
 
 /* ===== DAY CHIPS ===== */
-.chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto;}
-.inp-box{position:sticky;bottom:0;background:var(--bg);padding-top:8px;}
+.chip-area{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
 .chip.on{background:var(--orange);color:#fff;border-color:var(--orange);}
 .phrase-list-item{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border);min-height:44px;}
 .phrase-list-item:last-child{border-bottom:none;}
@@ -190,6 +190,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
           <th>脈拍</th>
           <th>SpO2</th>
           <th>排泄</th>
+          <th style="white-space:nowrap;">最終排便</th>
           <th>入浴</th>
           <th>食事</th>
           <th>レク</th>
@@ -247,8 +248,29 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
             <select id="exUrine"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
           </div>
           <div class="fg"><label>排便</label>
-            <select id="exStool"><option>なし</option><option>少量</option><option>中量</option><option>大量</option></select>
+            <select id="exStool">
+              <option>なし</option>
+              <option>普通便 少量</option>
+              <option>普通便 中量</option>
+              <option>普通便 多量</option>
+              <option>硬便 少量</option>
+              <option>硬便 中量</option>
+              <option>軟便 少量</option>
+              <option>軟便 中量</option>
+              <option>軟便 多量</option>
+              <option>水様便 少量</option>
+              <option>水様便 中量</option>
+              <option>水様便 多量</option>
+            </select>
           </div>
+        </div>
+        <div class="fg"><label>記入者</label>
+          <select id="exWriter">
+            <option value="">── 記入者を選択 ──</option>
+            <option>出口あ</option><option>鑓水</option><option>出口け</option>
+            <option>岩下</option><option>多田</option><option>渡辺</option>
+            <option>森田</option><option>井上</option>
+          </select>
         </div>
         <button class="save-btn" onclick="saveEx()">記録する</button>
       </div>
@@ -315,6 +337,14 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div class="inp-box">
         <h4>＋ 申し送り入力</h4>
         <div class="fg"><textarea id="noteText" placeholder="申し送り内容を入力..." rows="6" style="resize:none;"></textarea></div>
+        <div class="fg"><label>記入者</label>
+          <select id="noteWriter">
+            <option value="">── 記入者を選択 ──</option>
+            <option>出口あ</option><option>鑓水</option><option>出口け</option>
+            <option>岩下</option><option>多田</option><option>渡辺</option>
+            <option>森田</option><option>井上</option>
+          </select>
+        </div>
         <button class="save-btn" onclick="saveNote()">登録する</button>
       </div>
     </div>
@@ -465,6 +495,20 @@ function saveDB(){
   localStorage.setItem('kaigo3', JSON.stringify(db));
   syncTo();
 }
+function getLastStool(name){
+  const DAYS=['日','月','火','水','木','金','土'];
+  let latestMs=0,latestDay='',latestTime='';
+  Object.entries(db.records).forEach(([dk,dayData])=>{
+    if(!dayData[name]) return;
+    dayData[name].excretion.forEach(e=>{
+      if(e.stool&&e.stool!=='なし'){
+        const dt=new Date(dk+'T'+e.time+':00');
+        if(dt.getTime()>latestMs){latestMs=dt.getTime();latestDay=DAYS[dt.getDay()];latestTime=e.time;}
+      }
+    });
+  });
+  return latestMs?{dt:latestMs,dayStr:latestDay,time:latestTime}:null;
+}
 
 // ==================== HELPERS ====================
 function dk(d){ const dt=d||curDate; return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate()); }
@@ -515,20 +559,32 @@ function renderMain(){
   const tbody=document.getElementById('mainTbody');
   const res=todayRes();
   if(res.length===0){
-    tbody.innerHTML='<tr><td colspan="10" style="padding:32px;text-align:center;color:var(--text3);">この日の予定利用者はいません</td></tr>';
+    tbody.innerHTML='<tr><td colspan="11" style="padding:32px;text-align:center;color:var(--text3);">この日の予定利用者はいません</td></tr>';
     return;
   }
   tbody.innerHTML=res.map(r=>{
     const rec=getRec(r.name);
     // vital
     const lv=rec.vital.length?rec.vital[rec.vital.length-1]:null;
-    const tc=lv?`<span class="cell-val">${lv.temp}℃</span>`:'<span class="cell-empty">—</span>';
-    const bc=lv?`<span class="cell-val">${lv.sbp}/${lv.dbp}</span>`:'<span class="cell-empty">—</span>';
-    const pc=lv?`<span class="cell-val">${lv.pulse}</span>`:'<span class="cell-empty">—</span>';
+    const tc=lv?`<span class="${parseFloat(lv.temp)>=37.0?'cell-warn':'cell-val'}">${lv.temp}℃</span>`:'<span class="cell-empty">—</span>';
+    const bc=lv?`<span class="${parseInt(lv.sbp)>=160?'cell-warn':'cell-val'}">${lv.sbp}/${lv.dbp}</span>`:'<span class="cell-empty">—</span>';
+    const pc=lv?`<span class="${parseInt(lv.pulse)>=90?'cell-warn':'cell-val'}">${lv.pulse}</span>`:'<span class="cell-empty">—</span>';
     const sc=lv?`<span class="cell-val">${lv.spo2}%</span>`:'<span class="cell-empty">—</span>';
     // excretion
     const le=rec.excretion.length?rec.excretion[rec.excretion.length-1]:null;
-    const ec=le?`<span class="cell-val">${le.time}<br>${le.stool!=='なし'?'便('+le.stool+')':le.urine!=='なし'?'尿('+le.urine+')':''}</span>`:'<span class="cell-empty">—</span>';
+    const _leStoolText=le&&le.stool!=='なし'?'便('+le.stool+')':le&&le.urine!=='なし'?'尿('+le.urine+')':'';
+    const _leWater=le&&le.stool&&le.stool.startsWith('水様便');
+    const ec=le?`<span class="${_leWater?'cell-warn':'cell-val'}">${le.time}<br>${_leStoolText}</span>`:'<span class="cell-empty">—</span>';
+    // last stool (across all dates)
+    const _ls=getLastStool(r.name);
+    let lsc;
+    if(!_ls){lsc='<span class="cell-empty">—</span>';}
+    else{const _ha=(Date.now()-_ls.dt)/3600000;
+      if(_ha<48)lsc=`<span class="cell-val" style="font-size:14px;">${_ls.dayStr}曜 ${_ls.time}</span>`;
+      else if(_ha<60)lsc='<span style="color:var(--red);font-size:15px;font-weight:600;">－2日</span>';
+      else if(_ha<72)lsc='<span style="color:var(--red);font-size:15px;font-weight:600;">－3日</span>';
+      else lsc='<span style="color:var(--red);font-size:15px;font-weight:600;">－4日</span>';
+    }
     // bath
     const bac=rec.bath.length?'<span class="cell-red">○</span>':'<span class="cell-empty">—</span>';
     // meal
@@ -555,6 +611,7 @@ function renderMain(){
       <td onclick="openDetail('${r.name}','vital')">${pc}</td>
       <td onclick="openDetail('${r.name}','vital')">${sc}</td>
       <td onclick="openDetail('${r.name}','excretion')">${ec}</td>
+      <td onclick="openDetail('${r.name}','excretion')">${lsc}</td>
       <td onclick="openDetail('${r.name}','bath')">${bac}</td>
       <td onclick="openDetail('${r.name}','meal')">${mc}</td>
       <td onclick="openDetail('${r.name}','rec')">${rc}</td>
@@ -617,11 +674,17 @@ function refreshPanel(tab){
   }
   else if(tab==='excretion'){
     document.getElementById('listEx').innerHTML=rec.excretion.length?
-      rec.excretion.map((e,i)=>`<div class="rec-item"><span class="rec-time">${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${e.stool}</div><button class="rec-edit" onclick="editEx(${i})">✎</button><button class="rec-del" onclick="delEx(${i})">✕</button></div>`).join(''):
+      rec.excretion.map((e,i)=>{
+        const isW=e.stool&&e.stool.startsWith('水様便');
+        const stoolHtml=`<span${isW?' style="color:var(--red);font-weight:600;"':''}>${e.stool}</span>`;
+        const writerHtml=e.writer?`<span style="font-size:13px;color:var(--text3);margin-left:8px;">📝${e.writer}</span>`:'';
+        return `<div class="rec-item"><span class="rec-time">${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${stoolHtml}${writerHtml}</div><button class="rec-edit" onclick="editEx(${i})">✎</button><button class="rec-del" onclick="delEx(${i})">✕</button></div>`;
+      }).join(''):
       '<div class="no-rec">記録なし</div>';
     document.getElementById('exTime').value=nowTime();
     document.getElementById('exUrine').value='なし';
     document.getElementById('exStool').value='なし';
+    document.getElementById('exWriter').value='';
   }
   else if(tab==='bath'){
     document.getElementById('listBath').innerHTML=rec.bath.length?
@@ -670,7 +733,7 @@ function refreshPanel(tab){
         const ag=h<1?'今':h<24?h+'時間前':Math.floor(h/24)+'日前';
         const within=age<48*3600000;
         return `<div class="note-item" style="${within?'':'border-color:var(--border2);background:var(--gray1);'}">
-          <div class="note-meta">${fmtTs(n.ts)} (${ag})</div>
+          <div class="note-meta">${fmtTs(n.ts)} (${ag})${n.writer?'　📝'+n.writer:''}</div>
           <div class="note-text">${n.text}</div>
           <div style="display:flex;gap:6px;margin-top:6px;">
             <button class="rec-edit" onclick="editNote(${rec.notes.length-1-i})">✎ 編集</button>
@@ -680,6 +743,7 @@ function refreshPanel(tab){
       }).join(''):
       '<div class="no-rec">申し送りなし</div>';
     document.getElementById('noteText').value='';
+    document.getElementById('noteWriter').value='';
   }
 }
 function buildSel(id, cur){
@@ -720,7 +784,9 @@ function saveEx(){
   let time=document.getElementById('exTime').value; if(!time) time=nowTime();
   const urine=document.getElementById('exUrine').value;
   const stool=document.getElementById('exStool').value;
-  getRec(curRes).excretion.push({time,urine,stool});
+  const writer=document.getElementById('exWriter').value;
+  if(!writer){ alert('記入者を選択してください'); return; }
+  getRec(curRes).excretion.push({time,urine,stool,writer});
   saveDB(); goBack();
 }
 function delEx(i){ if(!confirm('削除しますか？'))return; getRec(curRes).excretion.splice(i,1); saveDB(); refreshPanel('excretion'); }
@@ -782,7 +848,9 @@ function applyAllRec(){
 function saveNote(){
   const text=document.getElementById('noteText').value.trim();
   if(!text){ alert('内容を入力してください'); return; }
-  getRec(curRes).notes.push({ts:new Date().toISOString(),text});
+  const writer=document.getElementById('noteWriter').value;
+  if(!writer){ alert('記入者を選択してください'); return; }
+  getRec(curRes).notes.push({ts:new Date().toISOString(),text,writer});
   saveDB(); goBack();
 }
 function delNote(i){ if(!confirm('削除しますか？'))return; getRec(curRes).notes.splice(i,1); saveDB(); refreshPanel('notes'); }
@@ -814,14 +882,17 @@ function editEx(i){
   const newTime=prompt('時刻を入力',e.time);
   if(newTime===null) return;
   const urineOpts=['なし','少量','中量','大量'];
-  const stoolOpts=['なし','少量','中量','大量'];
-  const urineStr=urineOpts.join(' / ');
-  const stoolStr=stoolOpts.join(' / ');
+  const stoolOpts=['なし','普通便 少量','普通便 中量','普通便 多量','硬便 少量','硬便 中量','軟便 少量','軟便 中量','軟便 多量','水様便 少量','水様便 中量','水様便 多量'];
+  const writerOpts=['出口あ','鑓水','出口け','岩下','多田','渡辺','森田','井上'];
+  const urineStr=urineOpts.join('/');
+  const stoolStr=stoolOpts.join('/');
   const newUrine=prompt('排尿 ('+urineStr+')',e.urine);
   if(newUrine===null) return;
   const newStool=prompt('排便 ('+stoolStr+')',e.stool);
   if(newStool===null) return;
-  rec.excretion[i]={time:newTime||e.time,urine:urineOpts.includes(newUrine)?newUrine:e.urine,stool:stoolOpts.includes(newStool)?newStool:e.stool};
+  const newWriter=prompt('記入者 ('+writerOpts.join('/')+' または空白)',e.writer||'');
+  if(newWriter===null) return;
+  rec.excretion[i]={time:newTime||e.time,urine:urineOpts.includes(newUrine)?newUrine:e.urine,stool:stoolOpts.includes(newStool)?newStool:e.stool,writer:writerOpts.includes(newWriter)?newWriter:(e.writer||'')};
   saveDB(); refreshPanel('excretion');
 }
 
@@ -844,7 +915,10 @@ function editNote(i){
   const newText=prompt('申し送りを編集',n.text);
   if(newText===null) return;
   if(!newText.trim()){ alert('内容を入力してください'); return; }
-  rec.notes[i]={ts:n.ts,text:newText.trim()};
+  const writerOpts=['出口あ','鑓水','出口け','岩下','多田','渡辺','森田','井上'];
+  const newWriter=prompt('記入者 ('+writerOpts.join('/')+' または空白)',n.writer||'');
+  if(newWriter===null) return;
+  rec.notes[i]={ts:n.ts,text:newText.trim(),writer:writerOpts.includes(newWriter)?newWriter:(n.writer||'')};
   saveDB(); refreshPanel('notes');
 }
 
