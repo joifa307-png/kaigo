@@ -1250,7 +1250,7 @@ function syncTo(){
   fetch(JURL, {method:'PUT', headers:{'Content-Type':'application/json','X-Master-Key':JKEY},
     body: JSON.stringify({data: JSON.stringify(db), timestamp: Date.now()})
   }).then(r=>r.json()).then(res=>{
-    syncTs = res.record?.timestamp || Date.now();
+    syncTs = (res.record && res.record.timestamp) || Date.now();
     const n = new Date();
     setSyncStatus('同期済 '+n.getHours()+':'+String(n.getMinutes()).padStart(2,'0'), 'green');
   }).catch(()=>setSyncStatus('同期失敗','orange'));
