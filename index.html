@@ -298,6 +298,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
           <h4 style="margin:0">食事入力</h4>
           <button class="all-btn" onclick="applyAllMeal()">全員に反映</button>
         </div>
+        <div class="fg" style="max-width:160px"><label>時刻</label><input type="time" id="mTime" value="11:50"></div>
         <div class="fg"><label>メニュー</label><input type="text" id="mMenu" placeholder="例：鮭の塩焼き定食"></div>
         <div class="row3">
           <div class="fg"><label>主食 %</label><select id="mMain"></select></div>
@@ -366,6 +367,28 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
           </select>
         </div>
         <button class="save-btn" onclick="saveDay()">保存</button>
+      </div>
+    </div>
+
+    <!-- CARE RECORD -->
+    <div class="panel" id="pCare">
+      <div class="rec-list" id="listCare"></div>
+      <div class="inp-box">
+        <h4>＋ ケア記録入力</h4>
+        <div class="row2">
+          <div class="fg"><label>時刻</label><input type="time" id="careTime"></div>
+          <div class="fg"><label>記入者</label>
+            <select id="careStaff">
+              <option value="">── 記入者を選択 ──</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:8px;">
+          <div style="font-size:15px;color:var(--text2);font-weight:500;margin-bottom:8px;">定型文チップ</div>
+          <div class="chip-area" id="careChips" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        </div>
+        <div class="fg"><textarea id="careText" placeholder="ケア内容を入力..." rows="5" style="resize:none;"></textarea></div>
+        <button class="save-btn" onclick="saveCare()">記録する</button>
       </div>
     </div>
 
@@ -697,6 +720,7 @@ const TABS=[
   {id:'rec',label:'🎯 レク'},
   {id:'notes',label:'📝 申し送り'},
   {id:'day',label:'☀️ 1日の様子'},
+  {id:'care',label:'🩺 ケア記録'},
 ];
 function openDetail(name, tab){
   curRes=name; curTab=tab||'vital';
@@ -762,6 +786,7 @@ function refreshPanel(tab){
     document.getElementById('baType').value='普通浴';
   }
   else if(tab==='meal'){
+    document.getElementById('mTime').value=rec.meal.time||'11:50';
     document.getElementById('mMenu').value=rec.meal.menu||'';
     document.getElementById('mWater').value=rec.meal.water||'';
     buildSel('mMain',rec.meal.main);
@@ -816,6 +841,28 @@ function refreshPanel(tab){
       '<div class="no-rec">申し送りなし</div>';
     document.getElementById('noteText').value='';
     buildStaffSelect('noteWriter','');
+  }
+  else if(tab==='care'){
+    const careItems=rec.care||[];
+    document.getElementById('listCare').innerHTML=careItems.length?
+      [...careItems].reverse().map((c,i)=>{
+        const staffHtml=c.staff?`<span style="font-size:13px;color:var(--text3);margin-left:8px;">📝${c.staff}</span>`:'';
+        return `<div class="rec-item">
+          <span class="rec-time">${c.time}</span>
+          <div class="rec-body">${c.text}${staffHtml}</div>
+          <button class="rec-edit" onclick="editCare(${careItems.length-1-i})">✎</button>
+          <button class="rec-del" onclick="delCare(${careItems.length-1-i})">✕</button>
+        </div>`;
+      }).join(''):
+      '<div class="no-rec">記録なし</div>';
+    document.getElementById('careTime').value=nowTime();
+    buildStaffSelect('careStaff','');
+    // 定型文チップ
+    const phrases=loadCarePhrases();
+    document.getElementById('careChips').innerHTML=phrases.length?
+      phrases.map(p=>`<button class="chip" onclick="toggleCareChip(this,'${p.replace(/'/g,"\'")}'">${p}</button>`).join(''):
+      '<span style="font-size:13px;color:var(--text3);">定型文なし（設定⚙️から追加できます）</span>';
+    document.getElementById('careText').value='';
   }
 }
 function buildSel(id, cur){
@@ -875,6 +922,7 @@ function delBath(i){ if(!confirm('削除しますか？'))return; getRec(curRes)
 
 function saveMeal(){
   const r=getRec(curRes);
+  r.meal.time=document.getElementById('mTime').value||'11:50';
   r.meal.menu=document.getElementById('mMenu').value;
   r.meal.main=document.getElementById('mMain').value;
   r.meal.side=document.getElementById('mSide').value;
@@ -882,11 +930,12 @@ function saveMeal(){
   saveDB(); goBack();
 }
 function applyAllMeal(){
+  const time=document.getElementById('mTime').value||'11:50';
   const menu=document.getElementById('mMenu').value;
   const main=document.getElementById('mMain').value;
   const side=document.getElementById('mSide').value;
   const water=document.getElementById('mWater').value;
-  todayRes().forEach(r=>{ const rec=getRec(r.name); rec.meal.menu=menu; rec.meal.main=main; rec.meal.side=side; rec.meal.water=water; });
+  todayRes().forEach(r=>{ const rec=getRec(r.name); rec.meal.time=time; rec.meal.menu=menu; rec.meal.main=main; rec.meal.side=side; rec.meal.water=water; });
   saveDB(); alert('全員に反映しました');
 }
 
@@ -1201,6 +1250,55 @@ function saveDay(){
   const staff=document.getElementById('dayWriter').value;
   getRec(curRes).day={text,staff};
   saveDB(); goBack();
+}
+
+// ==================== CARE RECORD ====================
+function toggleCareChip(el, phrase){
+  el.classList.toggle('on');
+  const ta=document.getElementById('careText');
+  if(el.classList.contains('on')){
+    const cur=ta.value;
+    ta.value=cur+(cur&&!cur.endsWith('\n')?'\n':'')+phrase;
+  } else {
+    ta.value=ta.value.split('\n').filter(line=>line!==phrase).join('\n');
+  }
+}
+function saveCare(){
+  let time=document.getElementById('careTime').value; if(!time) time=nowTime();
+  const staff=document.getElementById('careStaff').value;
+  if(!staff){ alert('記入者を選択してください'); return; }
+  const text=document.getElementById('careText').value.trim();
+  if(!text){ alert('内容を入力してください'); return; }
+  const rec=getRec(curRes);
+  if(!rec.care) rec.care=[];
+  rec.care.push({time,staff,text});
+  saveDB(); refreshPanel('care');
+}
+function delCare(i){
+  if(!confirm('削除しますか？'))return;
+  const rec=getRec(curRes);
+  if(!rec.care) rec.care=[];
+  rec.care.splice(i,1);
+  saveDB(); refreshPanel('care');
+}
+function editCare(i){
+  const rec=getRec(curRes);
+  if(!rec.care) rec.care=[];
+  const c=rec.care[i];
+  const newTime=prompt('時刻を入力',c.time);
+  if(newTime===null) return;
+  const staffOpts=loadStaffList();
+  const newStaff=prompt('記入者 ('+staffOpts.join('/')+' または空白)',c.staff||'');
+  if(newStaff===null) return;
+  const newText=prompt('内容を編集',c.text);
+  if(newText===null) return;
+  if(!newText.trim()){ alert('内容を入力してください'); return; }
+  rec.care[i]={
+    time:newTime||c.time,
+    staff:staffOpts.includes(newStaff)?newStaff:(c.staff||''),
+    text:newText.trim()
+  };
+  saveDB(); refreshPanel('care');
 }
 
 // ==================== RESIDENT MGMT ====================
