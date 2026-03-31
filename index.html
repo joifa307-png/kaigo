@@ -67,9 +67,10 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 .tab.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:700;background:var(--orange-bg);}
 
 /* ===== TAB PANELS ===== */
-.panels{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;}
-.panel{display:none;padding:14px;}
-.panel.active{display:block;}
+.panels{flex:1;overflow:hidden;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;}
+.panel{display:none;}
+.panel.active{display:flex;flex-direction:column;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;}
+#pDay.active{overflow-y:hidden;padding:0;}
 
 /* ===== RECORD LIST ===== */
 .rec-list{margin-bottom:16px;}
@@ -149,8 +150,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 @media print{
   .screen{display:block!important;height:auto!important;}
   #mainScreen,#detailScreen .tabs,#detailScreen .detail-hdr,.hdr,.no-print{display:none!important;}
-  .panels{overflow:visible!important;}
-  .panel{display:block!important;}
+  .panels{overflow:visible!important;display:block!important;}
+  .panel{display:block!important;overflow:visible!important;}
+  #pDay.active{overflow:visible!important;}
 }
 
 /* ===== SYNC BAR ===== */
@@ -351,12 +353,16 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
 
     <!-- DAY SUMMARY -->
     <div class="panel" id="pDay">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:15px;color:var(--text2);font-weight:500;">定型文チップ</div>
-        <button class="all-btn" onclick="openDayPhraseEdit()">✎ 文言編集</button>
+      <!-- チップエリア（スクロール可） -->
+      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:15px;color:var(--text2);font-weight:500;">定型文チップ</div>
+          <button class="all-btn" onclick="openDayPhraseEdit()">✎ 文言編集</button>
+        </div>
+        <div class="chip-area" id="dayChips"></div>
       </div>
-      <div class="chip-area" id="dayChips"></div>
-      <div class="inp-box">
+      <!-- テキストボックス・保存ボタン（固定） -->
+      <div class="inp-box" style="flex-shrink:0;margin:0 14px 14px;">
         <h4>1日の様子</h4>
         <div class="fg"><textarea id="dayText" placeholder="例：午前中は機嫌よく過ごされました。食欲もあり完食されました。" rows="6"></textarea></div>
         <button class="save-btn" onclick="saveDay()">保存</button>
@@ -494,6 +500,29 @@ function loadDB(){
 function saveDB(){
   localStorage.setItem('kaigo3', JSON.stringify(db));
   syncTo();
+}
+function get48hRecords(name,tab){
+  const now=Date.now(),limit=48*3600000,all=[];
+  for(let d=0;d<=2;d++){
+    const dt=new Date(curDate); dt.setDate(dt.getDate()-d);
+    const k=dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());
+    const dayData=db.records[k]&&db.records[k][name];
+    if(!dayData||!dayData[tab]) continue;
+    dayData[tab].forEach((item,i)=>{
+      const ts=new Date(k+'T'+item.time+':00').getTime();
+      if(now-ts<=limit) all.push({...item,_dk:k,_i:i,_ts:ts});
+    });
+  }
+  return all.sort((a,b)=>b._ts-a._ts);
+}
+function recDayLabel(dkStr){
+  const todayK=dk();
+  const yd=new Date(curDate); yd.setDate(yd.getDate()-1);
+  const ydK=yd.getFullYear()+'-'+pad(yd.getMonth()+1)+'-'+pad(yd.getDate());
+  if(dkStr===todayK) return '';
+  if(dkStr===ydK) return '<span style="font-size:12px;color:var(--text3);">昨日 </span>';
+  const dow=['日','月','火','水','木','金','土'][new Date(dkStr+'T12:00:00').getDay()];
+  return `<span style="font-size:12px;color:var(--text3);">${dow}曜 </span>`;
 }
 function getLastStool(name){
   const DAYS=['日','月','火','水','木','金','土'];
@@ -662,9 +691,10 @@ function showPanel(tab){
 function refreshPanel(tab){
   const rec=getRec(curRes);
   if(tab==='vital'){
-    document.getElementById('listVital').innerHTML=rec.vital.length?
-      rec.vital.map((v,i)=>`<div class="rec-item"><span class="rec-time">${v.time}</span><div class="rec-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div><button class="rec-edit" onclick="editVital(${i})">✎</button><button class="rec-del" onclick="delVital(${i})">✕</button></div>`).join(''):
-      '<div class="no-rec">記録なし</div>';
+    const _vItems=get48hRecords(curRes,'vital');
+    document.getElementById('listVital').innerHTML=_vItems.length?
+      _vItems.map(v=>`<div class="rec-item"><span class="rec-time">${recDayLabel(v._dk)}${v.time}</span><div class="rec-body">体温 ${v.temp}℃ ／ 血圧 ${v.sbp}/${v.dbp} ／ 脈拍 ${v.pulse} ／ SpO2 ${v.spo2}%</div><button class="rec-edit" onclick="editVitalByDate('${v._dk}',${v._i})">✎</button><button class="rec-del" onclick="delVitalByDate('${v._dk}',${v._i})">✕</button></div>`).join(''):
+      '<div class="no-rec">記録なし（48時間）</div>';
     document.getElementById('vTime').value=nowTime();
     document.getElementById('vTemp').value='';
     document.getElementById('vSbp').value='';
@@ -673,14 +703,15 @@ function refreshPanel(tab){
     document.getElementById('vSpo2').value='';
   }
   else if(tab==='excretion'){
-    document.getElementById('listEx').innerHTML=rec.excretion.length?
-      rec.excretion.map((e,i)=>{
+    const _eItems=get48hRecords(curRes,'excretion');
+    document.getElementById('listEx').innerHTML=_eItems.length?
+      _eItems.map(e=>{
         const isW=e.stool&&e.stool.startsWith('水様便');
         const stoolHtml=`<span${isW?' style="color:var(--red);font-weight:600;"':''}>${e.stool}</span>`;
         const writerHtml=e.writer?`<span style="font-size:13px;color:var(--text3);margin-left:8px;">📝${e.writer}</span>`:'';
-        return `<div class="rec-item"><span class="rec-time">${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${stoolHtml}${writerHtml}</div><button class="rec-edit" onclick="editEx(${i})">✎</button><button class="rec-del" onclick="delEx(${i})">✕</button></div>`;
+        return `<div class="rec-item"><span class="rec-time">${recDayLabel(e._dk)}${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${stoolHtml}${writerHtml}</div><button class="rec-edit" onclick="editExByDate('${e._dk}',${e._i})">✎</button><button class="rec-del" onclick="delExByDate('${e._dk}',${e._i})">✕</button></div>`;
       }).join(''):
-      '<div class="no-rec">記録なし</div>';
+      '<div class="no-rec">記録なし（48時間）</div>';
     document.getElementById('exTime').value=nowTime();
     document.getElementById('exUrine').value='なし';
     document.getElementById('exStool').value='なし';
@@ -779,6 +810,7 @@ function saveVital(){
   saveDB(); goBack();
 }
 function delVital(i){ if(!confirm('削除しますか？'))return; getRec(curRes).vital.splice(i,1); saveDB(); refreshPanel('vital'); }
+function delVitalByDate(dk,i){ if(!confirm('削除しますか？'))return; getRec(curRes,dk).vital.splice(i,1); saveDB(); refreshPanel('vital'); }
 
 function saveEx(){
   let time=document.getElementById('exTime').value; if(!time) time=nowTime();
@@ -790,6 +822,7 @@ function saveEx(){
   saveDB(); goBack();
 }
 function delEx(i){ if(!confirm('削除しますか？'))return; getRec(curRes).excretion.splice(i,1); saveDB(); refreshPanel('excretion'); }
+function delExByDate(dk,i){ if(!confirm('削除しますか？'))return; getRec(curRes,dk).excretion.splice(i,1); saveDB(); refreshPanel('excretion'); }
 
 function saveBath(){
   let time=document.getElementById('baTime').value; if(!time) time=nowTime();
@@ -856,8 +889,9 @@ function saveNote(){
 function delNote(i){ if(!confirm('削除しますか？'))return; getRec(curRes).notes.splice(i,1); saveDB(); refreshPanel('notes'); }
 
 // ==================== EDIT FUNCTIONS ====================
-function editVital(i){
-  const rec=getRec(curRes);
+function editVitalByDate(dateKey,i){ _editVitalCore(getRec(curRes,dateKey),i); }
+function editVital(i){ _editVitalCore(getRec(curRes),i); }
+function _editVitalCore(rec,i){
   const v=rec.vital[i];
   const newTime=prompt('時刻を入力 (例: 09:30)',v.time);
   if(newTime===null) return;
@@ -876,8 +910,9 @@ function editVital(i){
   saveDB(); refreshPanel('vital');
 }
 
-function editEx(i){
-  const rec=getRec(curRes);
+function editExByDate(dateKey,i){ _editExCore(getRec(curRes,dateKey),i); }
+function editEx(i){ _editExCore(getRec(curRes),i); }
+function _editExCore(rec,i){
   const e=rec.excretion[i];
   const newTime=prompt('時刻を入力',e.time);
   if(newTime===null) return;
