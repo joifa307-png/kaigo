@@ -858,10 +858,7 @@ function refreshPanel(tab){
     document.getElementById('careTime').value=nowTime();
     buildStaffSelect('careStaff','');
     // 定型文チップ
-    const phrases=loadCarePhrases();
-    document.getElementById('careChips').innerHTML=phrases.length?
-      phrases.map(p=>`<button class="chip" onclick="toggleCareChip(this)">${p}</button>`).join(''):
-      '<span style="font-size:13px;color:var(--text3);">定型文なし（設定⚙️から追加できます）</span>';
+    buildCareChips();
     document.getElementById('careText').value='';
   }
 }
@@ -1253,6 +1250,30 @@ function saveDay(){
 }
 
 // ==================== CARE RECORD ====================
+function buildCareChips(){
+  const el=document.getElementById('careChips');
+  if(!el) return;
+  el.innerHTML='';
+  const phrases=loadCarePhrases();
+  if(!phrases.length){
+    const sp=document.createElement('span');
+    sp.style.cssText='font-size:13px;color:var(--text3);';
+    sp.textContent='定型文なし（設定⚙️から追加できます）';
+    el.appendChild(sp);
+    return;
+  }
+  phrases.forEach(function(p){
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='chip';
+    btn.textContent=p;
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      toggleCareChip(btn);
+    });
+    el.appendChild(btn);
+  });
+}
 function toggleCareChip(el){
   const phrase=el.textContent;
   el.classList.toggle('on');
