@@ -860,7 +860,7 @@ function refreshPanel(tab){
     // 定型文チップ
     const phrases=loadCarePhrases();
     document.getElementById('careChips').innerHTML=phrases.length?
-      phrases.map(p=>`<button class="chip" onclick="toggleCareChip(this,'${p.replace(/'/g,"\'")}'">${p}</button>`).join(''):
+      phrases.map(p=>`<button class="chip" onclick="toggleCareChip(this)">${p}</button>`).join(''):
       '<span style="font-size:13px;color:var(--text3);">定型文なし（設定⚙️から追加できます）</span>';
     document.getElementById('careText').value='';
   }
@@ -1253,7 +1253,8 @@ function saveDay(){
 }
 
 // ==================== CARE RECORD ====================
-function toggleCareChip(el, phrase){
+function toggleCareChip(el){
+  const phrase=el.textContent;
   el.classList.toggle('on');
   const ta=document.getElementById('careText');
   if(el.classList.contains('on')){
