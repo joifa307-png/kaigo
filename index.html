@@ -176,6 +176,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <button class="hdr-btn no-print" onclick="openUpload()">📊 予定表</button>
     <button class="hdr-btn no-print" onclick="openAdd()">👤 利用者追加</button>
     <button class="hdr-btn orange no-print" onclick="openPrint()">🖨 連絡帳</button>
+    <button class="hdr-btn no-print" onclick="openSettings()" style="font-size:18px;padding:6px 10px;">⚙️</button>
     <button class="hdr-btn no-print" id="btnSave"
       onclick="saveJSON()"
       oncontextmenu="deletePrevMonth();return false;"
@@ -269,9 +270,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
         <div class="fg"><label>記入者</label>
           <select id="exWriter">
             <option value="">── 記入者を選択 ──</option>
-            <option>出口あ</option><option>鑓水</option><option>出口け</option>
-            <option>岩下</option><option>多田</option><option>渡辺</option>
-            <option>森田</option><option>井上</option>
           </select>
         </div>
         <button class="save-btn" onclick="saveEx()">記録する</button>
@@ -342,9 +340,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
         <div class="fg"><label>記入者</label>
           <select id="noteWriter">
             <option value="">── 記入者を選択 ──</option>
-            <option>出口あ</option><option>鑓水</option><option>出口け</option>
-            <option>岩下</option><option>多田</option><option>渡辺</option>
-            <option>森田</option><option>井上</option>
           </select>
         </div>
         <button class="save-btn" onclick="saveNote()">登録する</button>
@@ -365,6 +360,11 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div class="inp-box" style="flex-shrink:0;margin:0 14px 14px;">
         <h4>1日の様子</h4>
         <div class="fg"><textarea id="dayText" placeholder="例：午前中は機嫌よく過ごされました。食欲もあり完食されました。" rows="6"></textarea></div>
+        <div class="fg"><label>記入者</label>
+          <select id="dayWriter">
+            <option value="">── 記入者を選択 ──</option>
+          </select>
+        </div>
         <button class="save-btn" onclick="saveDay()">保存</button>
       </div>
     </div>
@@ -446,6 +446,41 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       </div>
       <div style="display:flex;justify-content:flex-end;">
         <button class="ov-btn orange" onclick="closeOv('ovDayPhrase')">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SETTINGS OVERLAY ==================== -->
+<div class="ov" id="ovSettings">
+  <div style="background:var(--white);border-radius:16px;width:90vw;max-width:480px;height:85vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:16px 20px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:18px;font-weight:600;">⚙️ 設定</div>
+      <button class="ov-btn" onclick="closeOv('ovSettings')">閉じる</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px;">
+      <div style="padding:16px 0;border-bottom:1px solid var(--border);">
+        <div style="font-size:15px;font-weight:600;color:var(--text2);margin-bottom:10px;">🏠 施設名</div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="settingFacility" placeholder="施設名を入力..." style="flex:1;padding:10px;border:1px solid var(--border2);border-radius:var(--r2);font-size:15px;font-family:inherit;">
+          <button class="ov-btn orange" onclick="saveFacilityNameFromInput()">保存</button>
+        </div>
+      </div>
+      <div style="padding:16px 0;border-bottom:1px solid var(--border);">
+        <div style="font-size:15px;font-weight:600;color:var(--text2);margin-bottom:10px;">👤 職員一覧</div>
+        <div id="settingStaffList" style="margin-bottom:10px;max-height:180px;overflow-y:auto;"></div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="newStaffInput" placeholder="職員名を入力..." style="flex:1;padding:10px;border:1px solid var(--border2);border-radius:var(--r2);font-size:15px;font-family:inherit;">
+          <button class="ov-btn orange" onclick="addStaff()">追加</button>
+        </div>
+      </div>
+      <div style="padding:16px 0;">
+        <div style="font-size:15px;font-weight:600;color:var(--text2);margin-bottom:10px;">🩺 ケア記録 定型文</div>
+        <div id="settingCareList" style="margin-bottom:10px;max-height:180px;overflow-y:auto;"></div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="newCareInput" placeholder="定型文を入力..." style="flex:1;padding:10px;border:1px solid var(--border2);border-radius:var(--r2);font-size:15px;font-family:inherit;">
+          <button class="ov-btn orange" onclick="addCarePhrase()">追加</button>
+        </div>
       </div>
     </div>
   </div>
@@ -563,6 +598,7 @@ function getRec(name, dateKey){
     meal:{menu:'',main:100,side:100,water:''},
     rec:{content:'',part:''},
     notes:[],
+    care:[],
     day:''
   };
   return db.records[k][name];
@@ -708,14 +744,15 @@ function refreshPanel(tab){
       _eItems.map(e=>{
         const isW=e.stool&&e.stool.startsWith('水様便');
         const stoolHtml=`<span${isW?' style="color:var(--red);font-weight:600;"':''}>${e.stool}</span>`;
-        const writerHtml=e.writer?`<span style="font-size:13px;color:var(--text3);margin-left:8px;">📝${e.writer}</span>`:'';
-        return `<div class="rec-item"><span class="rec-time">${recDayLabel(e._dk)}${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${stoolHtml}${writerHtml}</div><button class="rec-edit" onclick="editExByDate('${e._dk}',${e._i})">✎</button><button class="rec-del" onclick="delExByDate('${e._dk}',${e._i})">✕</button></div>`;
+        const staffName=e.staff||e.writer||'';
+        const staffHtml=staffName?`<span style="font-size:13px;color:var(--text3);margin-left:8px;">📝${staffName}</span>`:'';
+        return `<div class="rec-item"><span class="rec-time">${recDayLabel(e._dk)}${e.time}</span><div class="rec-body">排尿:${e.urine} ／ 排便:${stoolHtml}${staffHtml}</div><button class="rec-edit" onclick="editExByDate('${e._dk}',${e._i})">✎</button><button class="rec-del" onclick="delExByDate('${e._dk}',${e._i})">✕</button></div>`;
       }).join(''):
       '<div class="no-rec">記録なし（48時間）</div>';
     document.getElementById('exTime').value=nowTime();
     document.getElementById('exUrine').value='なし';
     document.getElementById('exStool').value='なし';
-    document.getElementById('exWriter').value='';
+    buildStaffSelect('exWriter','');
   }
   else if(tab==='bath'){
     document.getElementById('listBath').innerHTML=rec.bath.length?
@@ -746,13 +783,16 @@ function refreshPanel(tab){
     if(rec.rec.part){ const pb=document.getElementById('part'+rec.rec.part); if(pb) pb.classList.add('on'); }
   }
   else if(tab==='day'){
-    document.getElementById('dayText').value=getRec(curRes).day||'';
+    const _dr=getRec(curRes);
+    const _dayText=getDayText(_dr);
+    const _dayStaff=getDayStaff(_dr);
+    document.getElementById('dayText').value=_dayText;
+    buildStaffSelect('dayWriter',_dayStaff);
     // チップを描画
     const dayChipsEl = document.getElementById('dayChips');
     const phrases = loadDayPhrases();
-    const curText = getRec(curRes).day||'';
     dayChipsEl.innerHTML = phrases.map((p,i)=>
-      `<button class="chip${curText.includes(p)?' on':''}" onclick="toggleDayChip(this,'${p.replace(/'/g,"\\'")}',${i})">${p}</button>`
+      `<button class="chip${_dayText.includes(p)?' on':''}" onclick="toggleDayChip(this,'${p.replace(/'/g,"\\'")}',${i})">${p}</button>`
     ).join('');
   }
   else if(tab==='notes'){
@@ -763,8 +803,9 @@ function refreshPanel(tab){
         const h=Math.floor(age/3600000);
         const ag=h<1?'今':h<24?h+'時間前':Math.floor(h/24)+'日前';
         const within=age<48*3600000;
+        const staffName=n.staff||n.writer||'';
         return `<div class="note-item" style="${within?'':'border-color:var(--border2);background:var(--gray1);'}">
-          <div class="note-meta">${fmtTs(n.ts)} (${ag})${n.writer?'　📝'+n.writer:''}</div>
+          <div class="note-meta">${fmtTs(n.ts)} (${ag})${staffName?'　📝'+staffName:''}</div>
           <div class="note-text">${n.text}</div>
           <div style="display:flex;gap:6px;margin-top:6px;">
             <button class="rec-edit" onclick="editNote(${rec.notes.length-1-i})">✎ 編集</button>
@@ -774,7 +815,7 @@ function refreshPanel(tab){
       }).join(''):
       '<div class="no-rec">申し送りなし</div>';
     document.getElementById('noteText').value='';
-    document.getElementById('noteWriter').value='';
+    buildStaffSelect('noteWriter','');
   }
 }
 function buildSel(id, cur){
@@ -816,9 +857,9 @@ function saveEx(){
   let time=document.getElementById('exTime').value; if(!time) time=nowTime();
   const urine=document.getElementById('exUrine').value;
   const stool=document.getElementById('exStool').value;
-  const writer=document.getElementById('exWriter').value;
-  if(!writer){ alert('記入者を選択してください'); return; }
-  getRec(curRes).excretion.push({time,urine,stool,writer});
+  const staff=document.getElementById('exWriter').value;
+  if(!staff){ alert('記入者を選択してください'); return; }
+  getRec(curRes).excretion.push({time,urine,stool,staff});
   saveDB(); goBack();
 }
 function delEx(i){ if(!confirm('削除しますか？'))return; getRec(curRes).excretion.splice(i,1); saveDB(); refreshPanel('excretion'); }
@@ -881,9 +922,9 @@ function applyAllRec(){
 function saveNote(){
   const text=document.getElementById('noteText').value.trim();
   if(!text){ alert('内容を入力してください'); return; }
-  const writer=document.getElementById('noteWriter').value;
-  if(!writer){ alert('記入者を選択してください'); return; }
-  getRec(curRes).notes.push({ts:new Date().toISOString(),text,writer});
+  const staff=document.getElementById('noteWriter').value;
+  if(!staff){ alert('記入者を選択してください'); return; }
+  getRec(curRes).notes.push({ts:new Date().toISOString(),text,staff});
   saveDB(); goBack();
 }
 function delNote(i){ if(!confirm('削除しますか？'))return; getRec(curRes).notes.splice(i,1); saveDB(); refreshPanel('notes'); }
@@ -918,16 +959,17 @@ function _editExCore(rec,i){
   if(newTime===null) return;
   const urineOpts=['なし','少量','中量','大量'];
   const stoolOpts=['なし','普通便 少量','普通便 中量','普通便 多量','硬便 少量','硬便 中量','軟便 少量','軟便 中量','軟便 多量','水様便 少量','水様便 中量','水様便 多量'];
-  const writerOpts=['出口あ','鑓水','出口け','岩下','多田','渡辺','森田','井上'];
+  const staffOpts=loadStaffList();
   const urineStr=urineOpts.join('/');
   const stoolStr=stoolOpts.join('/');
   const newUrine=prompt('排尿 ('+urineStr+')',e.urine);
   if(newUrine===null) return;
   const newStool=prompt('排便 ('+stoolStr+')',e.stool);
   if(newStool===null) return;
-  const newWriter=prompt('記入者 ('+writerOpts.join('/')+' または空白)',e.writer||'');
-  if(newWriter===null) return;
-  rec.excretion[i]={time:newTime||e.time,urine:urineOpts.includes(newUrine)?newUrine:e.urine,stool:stoolOpts.includes(newStool)?newStool:e.stool,writer:writerOpts.includes(newWriter)?newWriter:(e.writer||'')};
+  const curStaff=e.staff||e.writer||'';
+  const newStaff=prompt('記入者 ('+staffOpts.join('/')+' または空白)',curStaff);
+  if(newStaff===null) return;
+  rec.excretion[i]={time:newTime||e.time,urine:urineOpts.includes(newUrine)?newUrine:e.urine,stool:stoolOpts.includes(newStool)?newStool:e.stool,staff:staffOpts.includes(newStaff)?newStaff:curStaff};
   saveDB(); refreshPanel('excretion');
 }
 
@@ -950,11 +992,125 @@ function editNote(i){
   const newText=prompt('申し送りを編集',n.text);
   if(newText===null) return;
   if(!newText.trim()){ alert('内容を入力してください'); return; }
-  const writerOpts=['出口あ','鑓水','出口け','岩下','多田','渡辺','森田','井上'];
-  const newWriter=prompt('記入者 ('+writerOpts.join('/')+' または空白)',n.writer||'');
-  if(newWriter===null) return;
-  rec.notes[i]={ts:n.ts,text:newText.trim(),writer:writerOpts.includes(newWriter)?newWriter:(n.writer||'')};
+  const staffOpts=loadStaffList();
+  const curStaff=n.staff||n.writer||'';
+  const newStaff=prompt('記入者 ('+staffOpts.join('/')+' または空白)',curStaff);
+  if(newStaff===null) return;
+  rec.notes[i]={ts:n.ts,text:newText.trim(),staff:staffOpts.includes(newStaff)?newStaff:curStaff};
   saveDB(); refreshPanel('notes');
+}
+
+// ==================== SETTINGS / STAFF / FACILITY ====================
+const DEFAULT_STAFF = ['出口あ','鑓水','出口け','岩下','多田','渡辺','森田','井上'];
+
+function loadFacilityName(){
+  return localStorage.getItem('facilityName')||'';
+}
+function saveFacilityName(name){
+  localStorage.setItem('facilityName',name);
+}
+function loadStaffList(){
+  try{
+    const s=localStorage.getItem('staffList');
+    if(s){ const p=JSON.parse(s); if(Array.isArray(p)) return p; }
+  }catch(e){}
+  return DEFAULT_STAFF.slice();
+}
+function saveStaffList(list){
+  localStorage.setItem('staffList',JSON.stringify(list));
+}
+function loadCarePhrases(){
+  try{
+    const s=localStorage.getItem('carePhrases');
+    return s?JSON.parse(s):[];
+  }catch(e){ return []; }
+}
+function saveCarePhrases(phrases){
+  localStorage.setItem('carePhrases',JSON.stringify(phrases));
+}
+
+function buildStaffSelect(id, currentVal){
+  const sel=document.getElementById(id);
+  if(!sel) return;
+  const list=loadStaffList();
+  if(list.length===0){
+    sel.innerHTML='<option value="">（未登録）</option>';
+  } else {
+    sel.innerHTML='<option value="">── 記入者を選択 ──</option>'+
+      list.map(s=>`<option${currentVal&&s===currentVal?' selected':''}>${s}</option>`).join('');
+  }
+}
+
+function getDayText(rec){
+  const d=rec.day;
+  if(!d) return '';
+  return typeof d==='string'?d:(d.text||'');
+}
+function getDayStaff(rec){
+  const d=rec.day;
+  if(!d||typeof d==='string') return '';
+  return d.staff||'';
+}
+
+function openSettings(){
+  document.getElementById('settingFacility').value=loadFacilityName();
+  renderSettingStaffList();
+  renderSettingCareList();
+  document.getElementById('newStaffInput').value='';
+  document.getElementById('newCareInput').value='';
+  document.getElementById('ovSettings').classList.add('show');
+}
+function saveFacilityNameFromInput(){
+  const name=document.getElementById('settingFacility').value.trim();
+  saveFacilityName(name);
+  alert('施設名を保存しました');
+}
+function renderSettingStaffList(){
+  const list=loadStaffList();
+  document.getElementById('settingStaffList').innerHTML=list.length?
+    list.map((s,i)=>`<div class="phrase-list-item"><span class="phrase-list-text">${s}</span><button class="phrase-del-btn" onclick="delStaff(${i})">✕</button></div>`).join(''):
+    '<div style="font-size:14px;color:var(--text3);padding:8px 0;">職員が登録されていません</div>';
+}
+function addStaff(){
+  const inp=document.getElementById('newStaffInput');
+  const name=inp.value.trim();
+  if(!name){ alert('職員名を入力してください'); return; }
+  const list=loadStaffList();
+  if(list.includes(name)){ alert('すでに登録されています'); return; }
+  list.push(name);
+  saveStaffList(list);
+  inp.value='';
+  renderSettingStaffList();
+}
+function delStaff(i){
+  if(!confirm('この職員を削除しますか？')) return;
+  const list=loadStaffList();
+  list.splice(i,1);
+  saveStaffList(list);
+  renderSettingStaffList();
+}
+function renderSettingCareList(){
+  const phrases=loadCarePhrases();
+  document.getElementById('settingCareList').innerHTML=phrases.length?
+    phrases.map((p,i)=>`<div class="phrase-list-item"><span class="phrase-list-text">${p}</span><button class="phrase-del-btn" onclick="delCarePhrase(${i})">✕</button></div>`).join(''):
+    '<div style="font-size:14px;color:var(--text3);padding:8px 0;">定型文がありません</div>';
+}
+function addCarePhrase(){
+  const inp=document.getElementById('newCareInput');
+  const text=inp.value.trim();
+  if(!text){ alert('文言を入力してください'); return; }
+  const phrases=loadCarePhrases();
+  phrases.push(text);
+  saveCarePhrases(phrases);
+  inp.value='';
+  renderSettingCareList();
+}
+function delCarePhrase(i){
+  if(!confirm('この文言を削除しますか？')) return;
+  const phrases=loadCarePhrases();
+  phrases.splice(i,1);
+  saveCarePhrases(phrases);
+  renderSettingCareList();
 }
 
 // ==================== DAY PHRASES ====================
@@ -1042,7 +1198,8 @@ function delDayPhrase(i){
 }
 function saveDay(){
   const text=document.getElementById('dayText').value;
-  getRec(curRes).day=text;
+  const staff=document.getElementById('dayWriter').value;
+  getRec(curRes).day={text,staff};
   saveDB(); goBack();
 }
 
@@ -1145,7 +1302,7 @@ function buildPrintPages(sel, date){
     rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:1);
     const trs=rows.map(r=>'<tr><td>'+r.t+'</td><td>'+r.cat+'</td><td>'+r.body+'</td></tr>').join('')
       ||'<tr><td colspan="3" style="text-align:center;color:#999;">記録なし</td></tr>';
-    const dayText=rec.day||'';
+    const dayText=getDayText(rec);
     let nxt='—';
     const rr=db.residents.find(x=>x.name===name);
     if(rr){ for(let dd=d.getDate();dd<rr.sched.length;dd++){ if(rr.sched[dd]===1){ const nd=new Date(d.getFullYear(),d.getMonth(),dd+1); nxt=(nd.getMonth()+1)+'月'+nd.getDate()+'日（'+days[nd.getDay()]+'）'; break; }}}
