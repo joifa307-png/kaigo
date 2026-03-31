@@ -1267,8 +1267,11 @@ function buildCareChips(){
     btn.type='button';
     btn.className='chip';
     btn.textContent=p;
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
+    btn.addEventListener('touchend',function(e){
+      e.preventDefault();
+      toggleCareChip(btn);
+    },{passive:false});
+    btn.addEventListener('click',function(){
       toggleCareChip(btn);
     });
     el.appendChild(btn);
