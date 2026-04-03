@@ -680,7 +680,7 @@ function renderMain(){
     const _leWater=le&&le.stool&&le.stool.startsWith('水様便');
     const _lePad=le?le.pad||'なし':'なし';
     const _leStool=le?le.stool||'なし':'なし';
-    const ec=le?`<span class="${_leWater?'cell-warn':'cell-val'}" style="font-size:12px;">${le.time}<br>パット内尿（${_lePad}）<br>便（${_leStool}）</span>`:'<span class="cell-empty">—</span>';
+    const ec=le?`<span class="${_leWater?'cell-warn':'cell-val'}" style="font-size:14px;">${le.time}<br>パット内尿（${_lePad}）<br>便（${_leStool}）</span>`:'<span class="cell-empty">—</span>';
     // last stool (across all dates)
     const _ls=getLastStool(r.name);
     let lsc;
