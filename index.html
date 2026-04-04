@@ -262,7 +262,10 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
     <div class="panel" id="pVital">
       <div class="rec-list" id="listVital"></div>
       <div class="inp-box">
-        <h4>＋ バイタル入力</h4>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <h4 style="margin:0">＋ バイタル入力</h4>
+          <button class="all-btn" onclick="openVitalPrint()" style="background:var(--blue-bg);color:var(--blue);border-color:#B5D4F4;">📋 期間印刷</button>
+        </div>
         <div class="row2">
           <div class="fg"><label>時刻</label><input type="time" id="vTime"></div>
           <div class="fg"><label>体温 ℃</label><input type="tel" id="vTemp" placeholder="36.5" oninput="convTemp(this)"></div>
@@ -545,6 +548,22 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div style="display:flex;justify-content:flex-end;">
         <button class="ov-btn orange" onclick="closeOv('ovDayPhrase')">閉じる</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovVitalPrint">
+  <div class="ov-box">
+    <div class="ov-title">📋 バイタル期間印刷</div>
+    <div class="fg"><label>利用者名</label><input type="text" id="vpName" readonly="" style="font-size:16px;padding:10px;background:var(--gray1);"></div>
+    <div class="row2">
+      <div class="fg"><label>開始日</label><input type="date" id="vpStart" style="font-size:15px;padding:10px;"></div>
+      <div class="fg"><label>終了日</label><input type="date" id="vpEnd" style="font-size:15px;padding:10px;"></div>
+    </div>
+    <div class="fg"><label>施設名</label><input type="text" id="vpFacility" placeholder="（省略可）" style="font-size:15px;padding:10px;"></div>
+    <div class="ov-foot" style="margin-top:8px;">
+      <button class="ov-btn" onclick="closeOv('ovVitalPrint')">閉じる</button>
+      <button class="ov-btn orange" onclick="doVitalPrint()">印刷プレビュー</button>
     </div>
   </div>
 </div>
@@ -1794,6 +1813,77 @@ function handleXlsx(file){
   reader.readAsArrayBuffer(file);
 }
 // (予定表読込は将来拡張用 - 現在はINIT_RESIDENTSから読み込み)
+
+// ==================== バイタル期間印刷 ====================
+function openVitalPrint(){
+  const today=dk();
+  const d14=new Date(curDate); d14.setDate(d14.getDate()-13);
+  const s=d14.getFullYear()+'-'+pad(d14.getMonth()+1)+'-'+pad(d14.getDate());
+  document.getElementById('vpName').value=curRes;
+  document.getElementById('vpStart').value=s;
+  document.getElementById('vpEnd').value=today;
+  document.getElementById('vpFacility').value=loadFacilityName();
+  document.getElementById('ovVitalPrint').classList.add('show');
+}
+function doVitalPrint(){
+  const name=document.getElementById('vpName').value;
+  const start=document.getElementById('vpStart').value;
+  const end=document.getElementById('vpEnd').value;
+  const facility=document.getElementById('vpFacility').value.trim();
+  if(!start||!end){alert('期間を入力してください');return;}
+  if(start>end){alert('開始日は終了日以前にしてください');return;}
+  const rows=[];
+  const ds=new Date(start+'T00:00:00');
+  const de=new Date(end+'T00:00:00');
+  const days=['日','月','火','水','木','金','土'];
+  for(let d=new Date(ds);d<=de;d.setDate(d.getDate()+1)){
+    const k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    const dayData=db.records[k]&&db.records[k][name];
+    if(!dayData||!dayData.vital||!dayData.vital.length) continue;
+    const dateLabel=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()+'('+days[d.getDay()]+')';
+    dayData.vital.forEach(v=>{
+      rows.push('<tr><td>'+dateLabel+'</td><td>'+v.time+'</td><td>'+v.temp+'</td><td>'+v.sbp+'/'+v.dbp+'</td><td>'+v.pulse+'</td><td>'+v.spo2+'</td></tr>');
+    });
+  }
+  const tbody=rows.length?rows.join(''):'<tr><td colspan="6" style="text-align:center;color:#999;">記録なし</td></tr>';
+  const printDateLabel=start+'　〜　'+end;
+  const facilityHtml=facility?'<div style="text-align:right;font-size:9pt;margin-top:6pt;">'+facility+'</div>':'';
+  const todayLabel=new Date().getFullYear()+'/'+(new Date().getMonth()+1)+'/'+new Date().getDate();
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>バイタル記録</title>'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0;}'
+    +'body{font-family:\'Hiragino Sans\',\'Yu Gothic\',\'Meiryo\',sans-serif;font-size:10pt;line-height:1.4;}'
+    +'h1{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:6pt;}'
+    +'.meta{display:flex;justify-content:space-between;margin-bottom:6pt;font-size:9.5pt;}'
+    +'table{width:100%;border-collapse:collapse;margin-bottom:6pt;}'
+    +'th,td{padding:3pt 5pt;border:1px solid #bbb;font-size:9.5pt;text-align:center;}'
+    +'th{background:#f0f0f0;font-weight:bold;}'
+    +'.footer{font-size:8.5pt;color:#666;text-align:right;margin-top:4pt;}'
+    +'.noprint{padding:8px;background:#f5f5f5;display:flex;gap:8px;justify-content:center;}'
+    +'@media screen{.page{width:190mm;margin:10px auto;padding:10mm;background:#fff;border:1px solid #ddd;}}'
+    +'@media print{@page{size:A4 portrait;margin:10mm;}'
+    +'.noprint{display:none;}'
+    +'.page{width:100%;margin:0;padding:0;}'
+    +'}</style></head><body>'
+    +'<div class="noprint">'
+    +'<button onclick="window.close()" style="padding:8px 16px;font-size:14px;background:#888;color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ 閉じる</button>'
+    +'<button id="sb" onclick="var a=this.dataset.m!==\'a4\';var ss=document.getElementsByTagName(\'style\')[0];ss.textContent=ss.textContent.replace(a?\'A4 portrait\':\'A5 portrait\',a?\'A5 portrait\':\'A4 portrait\').replace(a?\'width:190mm\':\'width:148mm\',a?\'width:148mm\':\'width:190mm\').replace(a?\'margin:10mm\':\'margin:8mm\',a?\'margin:8mm\':\'margin:10mm\');this.dataset.m=a?\'a4\':\'\';this.textContent=a?\'A5に切替\':\'A4に切替\';" style="padding:8px 16px;font-size:14px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;">A5に切替</button>'
+    +'<button onclick="window.print()" style="padding:8px 18px;font-size:14px;background:#E87722;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 印刷/PDF</button>'
+    +'</div>'
+    +'<div class="page">'
+    +'<h1>バイタル記録</h1>'
+    +'<div class="meta"><span>利用者名：<strong>'+name+'</strong>　様</span><span>期間：'+printDateLabel+'</span></div>'
+    +'<table><thead><tr><th>日付</th><th>時刻</th><th>体温(℃)</th><th>血圧(収縮/拡張)</th><th>脈拍</th><th>SpO2(%)</th></tr></thead>'
+    +'<tbody>'+tbody+'</tbody></table>'
+    +'<div class="footer">印刷日：'+todayLabel+'</div>'
+    +facilityHtml
+    +'</div>'
+    +'</body></html>';
+  closeOv('ovVitalPrint');
+  const w=window.open('','_blank','width=900,height=700');
+  if(!w){alert('ポップアップを許可してください');return;}
+  w.document.write(html);
+  w.document.close();
+}
 
 // ==================== ケアサマリー印刷 ====================
 function openCareSummary(){
