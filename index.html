@@ -253,6 +253,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div class="detail-name" id="detName"></div>
       <div class="detail-date" id="detDate"></div>
     </div>
+    <button class="hdr-btn no-print" onclick="openCareSummary()" style="font-size:13px;padding:6px 10px;">📋 サマリー</button>
   </div>
   <div class="tabs" id="tabBar"></div>
   <div class="panels" id="panels">
@@ -544,6 +545,19 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,'Hiragino Sans',
       <div style="display:flex;justify-content:flex-end;">
         <button class="ov-btn orange" onclick="closeOv('ovDayPhrase')">閉じる</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ovCareSummary">
+  <div class="ov-box">
+    <div class="ov-title">📋 ケアサマリー印刷</div>
+    <div class="fg"><label>利用者名</label><input type="text" id="csName" readonly="" style="font-size:16px;padding:10px;background:var(--gray1);"></div>
+    <div class="fg"><label>日付</label><input type="date" id="csDate" style="font-size:15px;padding:10px;"></div>
+    <div class="fg"><label>施設名</label><input type="text" id="csFacility" placeholder="（省略可）" style="font-size:15px;padding:10px;"></div>
+    <div class="ov-foot" style="margin-top:8px;">
+      <button class="ov-btn" onclick="closeOv('ovCareSummary')">閉じる</button>
+      <button class="ov-btn orange" onclick="doCareSummary()">印刷プレビュー</button>
     </div>
   </div>
 </div>
@@ -1780,6 +1794,89 @@ function handleXlsx(file){
   reader.readAsArrayBuffer(file);
 }
 // (予定表読込は将来拡張用 - 現在はINIT_RESIDENTSから読み込み)
+
+// ==================== ケアサマリー印刷 ====================
+function openCareSummary(){
+  document.getElementById('csName').value=curRes;
+  document.getElementById('csDate').value=dk();
+  document.getElementById('csFacility').value=loadFacilityName();
+  document.getElementById('ovCareSummary').classList.add('show');
+}
+function doCareSummary(){
+  const name=document.getElementById('csName').value;
+  const date=document.getElementById('csDate').value;
+  const facility=document.getElementById('csFacility').value.trim();
+  if(!date){alert('日付を入力してください');return;}
+  const rec=getRec(name,date);
+  const days=['日','月','火','水','木','金','土'];
+  const d=new Date(date+'T00:00:00');
+  const dateLabel=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+days[d.getDay()]+'）';
+  const rows=[];
+  // バイタル
+  (rec.vital||[]).forEach(v=>{
+    rows.push({t:v.time,cat:'バイタル',body:'体温：'+v.temp+'℃　血圧：'+v.sbp+'/'+v.dbp+'　脈拍：'+v.pulse+'　SpO2：'+v.spo2+'%',staff:''});
+  });
+  // 食事
+  if(rec.meal&&rec.meal.bMain!=null){
+    rows.push({t:rec.meal.bTime||'07:30',cat:'朝食',body:'主食：'+rec.meal.bMain+'%　副食：'+rec.meal.bSide+'%'+(rec.meal.bWater?'　水分：'+rec.meal.bWater+'ml':''),staff:''});
+    rows.push({t:rec.meal.time||'11:50',cat:'昼食',body:'主食：'+rec.meal.main+'%　副食：'+rec.meal.side+'%'+(rec.meal.water?'　水分：'+rec.meal.water+'ml':'')+(rec.meal.menu?'　メニュー：'+rec.meal.menu:''),staff:''});
+    rows.push({t:rec.meal.dTime||'17:30',cat:'夕食',body:'主食：'+rec.meal.dMain+'%　副食：'+rec.meal.dSide+'%'+(rec.meal.dWater?'　水分：'+rec.meal.dWater+'ml':''),staff:''});
+  } else if(rec.meal&&rec.meal.menu){
+    const mt=rec.meal.time||'';
+    rows.push({t:mt,cat:'昼食',body:'主食：'+rec.meal.main+'%　副食：'+rec.meal.side+'%'+(rec.meal.water?'　水分：'+rec.meal.water+'ml':'')+(rec.meal.menu?'　メニュー：'+rec.meal.menu:''),staff:''});
+  }
+  // 排泄
+  (rec.excretion||[]).forEach(e=>{
+    rows.push({t:e.time,cat:'排泄',body:'排尿：'+e.urine+(e.pad&&e.pad!=='なし'?'　パット：'+e.pad:'')+'　排便：'+e.stool,staff:e.staff||e.writer||''});
+  });
+  // ケア記録
+  (rec.care||[]).forEach(c=>{
+    rows.push({t:c.time,cat:'ケア',body:c.text,staff:c.staff||''});
+  });
+  // 時刻順ソート（時刻なしは末尾）
+  rows.sort((a,b)=>a.t&&b.t?a.t.localeCompare(b.t):a.t?-1:b.t?1:0);
+  const tbody=rows.length?
+    rows.map(r=>'<tr><td>'+r.t+'</td><td>'+r.cat+'</td><td>'+r.body+'</td><td>'+r.staff+'</td></tr>').join(''):
+    '<tr><td colspan="4" style="text-align:center;color:#999;">記録なし</td></tr>';
+  const facilityHtml=facility?'<div style="text-align:right;font-size:9pt;margin-top:6pt;">'+facility+'</div>':'';
+  const todayLabel=new Date().getFullYear()+'/'+(new Date().getMonth()+1)+'/'+new Date().getDate();
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ケア記録</title>'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0;}'
+    +'body{font-family:\'Hiragino Sans\',\'Yu Gothic\',\'Meiryo\',sans-serif;font-size:10pt;line-height:1.4;}'
+    +'h1{font-size:13pt;font-weight:bold;text-align:center;margin-bottom:6pt;}'
+    +'.meta{display:flex;justify-content:space-between;margin-bottom:6pt;font-size:9.5pt;}'
+    +'table{width:100%;border-collapse:collapse;margin-bottom:6pt;}'
+    +'th,td{padding:3pt 5pt;border:1px solid #bbb;font-size:9.5pt;vertical-align:top;}'
+    +'th{background:#f0f0f0;font-weight:bold;text-align:center;}'
+    +'td:first-child,td:nth-child(2),td:last-child{text-align:center;white-space:nowrap;}'
+    +'.col-t{width:40pt;}.col-cat{width:44pt;}.col-staff{width:44pt;}'
+    +'.footer{font-size:8.5pt;color:#666;text-align:right;margin-top:4pt;}'
+    +'.noprint{padding:8px;background:#f5f5f5;display:flex;gap:8px;justify-content:center;}'
+    +'@media screen{.page{width:190mm;margin:10px auto;padding:10mm;background:#fff;border:1px solid #ddd;}}'
+    +'@media print{@page{size:A4 portrait;margin:10mm;}'
+    +'.noprint{display:none;}'
+    +'.page{width:100%;margin:0;padding:0;}'
+    +'}</style></head><body>'
+    +'<div class="noprint">'
+    +'<button onclick="window.close()" style="padding:8px 16px;font-size:14px;background:#888;color:#fff;border:none;border-radius:6px;cursor:pointer;">✕ 閉じる</button>'
+    +'<button id="sb" onclick="var a=this.dataset.m!==\'a4\';var ss=document.getElementsByTagName(\'style\')[0];ss.textContent=ss.textContent.replace(a?\'A4 portrait\':\'A5 portrait\',a?\'A5 portrait\':\'A4 portrait\').replace(a?\'width:190mm\':\'width:148mm\',a?\'width:148mm\':\'width:190mm\').replace(a?\'margin:10mm\':\'margin:8mm\',a?\'margin:8mm\':\'margin:10mm\');this.dataset.m=a?\'a4\':\'\';this.textContent=a?\'A5に切替\':\'A4に切替\';" style="padding:8px 16px;font-size:14px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;">A5に切替</button>'
+    +'<button onclick="window.print()" style="padding:8px 18px;font-size:14px;background:#E87722;color:#fff;border:none;border-radius:6px;cursor:pointer;">🖨 印刷/PDF</button>'
+    +'</div>'
+    +'<div class="page">'
+    +'<h1>ケア記録</h1>'
+    +'<div class="meta"><span>利用者名：<strong>'+name+'</strong>　様</span><span>'+dateLabel+'</span></div>'
+    +'<table><thead><tr><th class="col-t">時刻</th><th class="col-cat">区分</th><th>内容</th><th class="col-staff">担当</th></tr></thead>'
+    +'<tbody>'+tbody+'</tbody></table>'
+    +'<div class="footer">印刷日：'+todayLabel+'</div>'
+    +facilityHtml
+    +'</div>'
+    +'</body></html>';
+  closeOv('ovCareSummary');
+  const w=window.open('','_blank','width=900,height=700');
+  if(!w){alert('ポップアップを許可してください');return;}
+  w.document.write(html);
+  w.document.close();
+}
 
 // ==================== EXPORT / IMPORT ====================
 function saveJSON(){
