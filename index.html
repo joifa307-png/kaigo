@@ -928,13 +928,13 @@ function renderMain(){
     const _mBe=_med.bedtime&&_med.bedtime.items&&_med.bedtime.items.length>0;
     const _isToday=dk()===dk(new Date());
     const _nowH=new Date().getHours()+new Date().getMinutes()/60;
-    const _timings=[{l:'朝',done:_mMo,th:0},{l:'昼',done:_mLu,th:12},{l:'夕',done:_mDi,th:18},{l:'寝',done:_mBe,th:21}];
+    const _timings=[{done:_mMo,th:8.5},{done:_mLu,th:12},{done:_mDi,th:18},{done:_mBe,th:21}];
     const _mParts=[];
     _timings.forEach(t=>{
-      if(t.done) _mParts.push(`${t.l}<span style="color:var(--blue);font-weight:700;">✔</span>`);
-      else if(_isToday&&_nowH>=t.th) _mParts.push(`${t.l}<span style="color:var(--orange2);font-weight:700;">？</span>`);
+      if(t.done) _mParts.push('<span style="color:var(--blue);font-weight:700;">✔</span>');
+      else if(_isToday&&_nowH>=t.th) _mParts.push('<span style="color:var(--orange2);font-weight:700;">？</span>');
     });
-    const mdc=_mParts.length?`<span class="cell-val" style="font-size:13px;line-height:1.8;">${_mParts.join(' ')}</span>`:'<span class="cell-empty">—</span>';
+    const mdc=_mParts.length?`<span class="cell-val" style="font-size:18px;letter-spacing:1px;">${_mParts.join('')}</span>`:'<span class="cell-empty">—</span>';
     // notes 48h
     const now=Date.now();
     const h48=rec.notes.some(n=>(now-new Date(n.ts).getTime())<48*3600000);
@@ -1765,6 +1765,17 @@ function loadStaffList(){
     if(s){ const p=JSON.parse(s); if(Array.isArray(p)) return p; }
   }catch(e){}
   return [];
+}
+function buildStaffSelect(id, currentVal){
+  const sel=document.getElementById(id);
+  if(!sel) return;
+  const list=loadStaffList();
+  if(list.length===0){
+    sel.innerHTML='<option value="">（未登録）</option>';
+  } else {
+    sel.innerHTML='<option value="">── 対応者を選択 ──</option>'+
+      list.map(s=>`<option${currentVal&&s===currentVal?' selected':''}>${s}</option>`).join('');
+  }
 }
 function saveStaffList(list){
   localStorage.setItem('staffList',JSON.stringify(list));
