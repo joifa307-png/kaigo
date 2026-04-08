@@ -928,13 +928,13 @@ function renderMain(){
     const _mBe=_med.bedtime&&_med.bedtime.items&&_med.bedtime.items.length>0;
     const _isToday=dk()===dk(new Date());
     const _nowH=new Date().getHours()+new Date().getMinutes()/60;
-    function _mSym(done,threshold){return done?'<span style="color:var(--blue);font-weight:700;">✔</span>':(_isToday&&_nowH>=threshold?'<span style="color:var(--orange2);font-weight:700;">？</span>':'<span style="color:var(--text3);">-</span>');}
-    let mdc;
-    if(!_mMo&&!_mLu&&!_mDi&&!_mBe&&!(_isToday&&_nowH>=12)){
-      mdc='<span class="cell-empty">—</span>';
-    } else {
-      mdc=`<span class="cell-val" style="font-size:13px;line-height:2;">朝${_mSym(_mMo,0)} 昼${_mSym(_mLu,12)}<br>夕${_mSym(_mDi,18)} 寝${_mSym(_mBe,21)}</span>`;
-    }
+    const _timings=[{l:'朝',done:_mMo,th:0},{l:'昼',done:_mLu,th:12},{l:'夕',done:_mDi,th:18},{l:'寝',done:_mBe,th:21}];
+    const _mParts=[];
+    _timings.forEach(t=>{
+      if(t.done) _mParts.push(`${t.l}<span style="color:var(--blue);font-weight:700;">✔</span>`);
+      else if(_isToday&&_nowH>=t.th) _mParts.push(`${t.l}<span style="color:var(--orange2);font-weight:700;">？</span>`);
+    });
+    const mdc=_mParts.length?`<span class="cell-val" style="font-size:13px;line-height:1.8;">${_mParts.join(' ')}</span>`:'<span class="cell-empty">—</span>';
     // notes 48h
     const now=Date.now();
     const h48=rec.notes.some(n=>(now-new Date(n.ts).getTime())<48*3600000);
@@ -1642,7 +1642,8 @@ function openSummary(name){
     {label:'脈拍',fn:(r)=>{const lv=r.vital&&r.vital.length?r.vital[r.vital.length-1]:null;return lv?String(lv.pulse):'—';}},
     {label:'SpO2',fn:(r)=>{const lv=r.vital&&r.vital.length?r.vital[r.vital.length-1]:null;return lv&&lv.spo2?lv.spo2+'%':'—';}},
     {label:'排便',fn:(r)=>{if(!r.excretion)return '—';const ex=r.excretion.filter(e=>e.stool&&e.stool!=='なし');return ex.length?`<span style="color:#8B4513;">${ex[ex.length-1].stool}</span>`:'—';}},
-    {label:'パット交換',fn:(r)=>{if(!r.excretion)return '—';const ex=r.excretion.filter(e=>e.padChange||e.rehaChange||e.diaperChange);return ex.length?'<span style="color:#1a7fd4;font-weight:700;">交換</span>':'—';}},
+    {label:'パット交換',fn:(r)=>{if(!r.excretion)return '—';const ex=r.excretion.filter(e=>e.padChange);return ex.length?'<span style="color:#1a7fd4;font-weight:700;">交換</span>':'—';}},
+    {label:'リハパン/オムツ',fn:(r)=>{if(!r.excretion)return '—';const ex=r.excretion.filter(e=>e.rehaChange||e.diaperChange);if(!ex.length)return '—';const le=ex[ex.length-1];const parts=[];if(le.rehaChange)parts.push('リハパン');if(le.diaperChange)parts.push('オムツ');return `<span style="color:#1a7fd4;font-weight:700;">${parts.join('/')}</span>`;}},
     {label:'入浴',fn:(r)=>{return r.bath&&r.bath.length?r.bath[r.bath.length-1].type:'—';}},
     {label:'服薬朝',fn:(r)=>{const m=r.med&&r.med.morning;return m&&m.items&&m.items.length?'<span style="color:var(--blue);font-weight:700;">✔</span>':'—';}},
     {label:'服薬昼',fn:(r)=>{const m=r.med&&r.med.lunch;return m&&m.items&&m.items.length?'<span style="color:var(--blue);font-weight:700;">✔</span>':'—';}},
